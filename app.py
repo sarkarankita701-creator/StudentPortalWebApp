@@ -25,6 +25,12 @@ def create_app():
     def load_user(user_id):
         return User.query.get(int(user_id))
 
+    @app.context_processor
+    def inject_globals():
+        from datetime import datetime
+
+        return {"current_year": datetime.now().year}
+
     from routes.auth import auth_bp
     from routes.admin import admin_bp
     from routes.calendar import calendar_bp

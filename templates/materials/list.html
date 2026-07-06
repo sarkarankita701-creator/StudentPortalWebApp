@@ -2,7 +2,10 @@
 {% block title %}Material Bank{% endblock %}
 {% block content %}
 <div class="page-header">
-  <h2>Material Bank</h2>
+  <div>
+    <h2>📚 Material Bank</h2>
+    <p class="page-sub">Notes, worksheets, and resources shared with you — organised by category.</p>
+  </div>
   {% if current_user.is_teacher() or current_user.is_super_admin() %}
   <a href="{{ url_for('materials.new_material') }}" class="btn">+ Add Material</a>
   {% endif %}
@@ -32,7 +35,7 @@
     {% endfor %}
   </table>
   {% else %}
-  <p>No items yet.</p>
+  <p class="page-sub">No items in this category yet.</p>
   {% endif %}
 </div>
 {% endfor %}

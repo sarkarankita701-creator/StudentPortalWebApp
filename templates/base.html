@@ -3,35 +3,48 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Ankita's Classes student portal — classes, tests, materials, performance tracking and payments in one place.">
   <title>{% block title %}Ankita's Classes{% endblock %} &middot; Ankita's Classes</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
+<body class="{% if not current_user.is_authenticated %}auth-body{% endif %}">
   {% if current_user.is_authenticated %}
+  {% set ep = request.endpoint or '' %}
   <header class="topbar">
     <div class="brand">
-      Ankita's Classes
-      <div class="tagline">Confidence is the Curriculum</div>
+      <div class="brand-mark">A</div>
+      <div>
+        Ankita's Classes
+        <div class="tagline">Confidence is the Curriculum</div>
+      </div>
     </div>
     <nav class="navlinks">
-      <a href="{{ url_for('auth.dashboard') }}">Dashboard</a>
-      <a href="{{ url_for('calendar.list_events') }}">Calendar</a>
-      <a href="{{ url_for('materials.list_materials') }}">Material Bank</a>
-      <a href="{{ url_for('tests.list_tests') }}">Test Portal</a>
-      <a href="{{ url_for('performance.view') }}">Performance</a>
-      <a href="{{ url_for('payments.view') }}">Payments</a>
-      <a href="{{ url_for('doubts.view') }}">Doubt Sessions</a>
+      <a href="{{ url_for('auth.dashboard') }}" class="{{ 'active' if ep == 'auth.dashboard' }}">Dashboard</a>
+      <a href="{{ url_for('calendar.list_events') }}" class="{{ 'active' if ep.startswith('calendar.') }}">Calendar</a>
+      <a href="{{ url_for('materials.list_materials') }}" class="{{ 'active' if ep.startswith('materials.') }}">Material Bank</a>
+      <a href="{{ url_for('tests.list_tests') }}" class="{{ 'active' if ep.startswith('tests.') }}">Test Portal</a>
+      <a href="{{ url_for('performance.view') }}" class="{{ 'active' if ep.startswith('performance.') }}">Performance</a>
+      <a href="{{ url_for('payments.view') }}" class="{{ 'active' if ep.startswith('payments.') }}">Payments</a>
+      <a href="{{ url_for('doubts.view') }}" class="{{ 'active' if ep.startswith('doubts.') }}">Doubt Sessions</a>
       {% if current_user.is_teacher() %}
-      <a href="{{ url_for('teacher.settings') }}">My Settings</a>
+      <a href="{{ url_for('teacher.settings') }}" class="{{ 'active' if ep.startswith('teacher.') }}">My Settings</a>
       {% endif %}
       {% if current_user.is_super_admin() %}
-      <a href="{{ url_for('admin.users') }}">Users</a>
-      <a href="{{ url_for('admin.finance') }}">Finance</a>
-      <a href="{{ url_for('admin.settings') }}">Settings</a>
+      <a href="{{ url_for('admin.users') }}" class="{{ 'active' if ep == 'admin.users' or ep == 'admin.create_user' }}">Users</a>
+      <a href="{{ url_for('admin.finance') }}" class="{{ 'active' if ep == 'admin.finance' }}">Finance</a>
+      <a href="{{ url_for('admin.settings') }}" class="{{ 'active' if ep == 'admin.settings' }}">Settings</a>
       {% endif %}
     </nav>
     <div class="userbox">
-      <span>{{ current_user.name }} <small>({{ current_user.role.replace('_', ' ') }})</small></span>
+      <div class="avatar">{{ current_user.name[:1] }}</div>
+      <div class="user-meta">
+        <span class="user-name">{{ current_user.name }}</span>
+        <span class="user-role">{{ current_user.role.replace('_', ' ') }}</span>
+      </div>
       <a href="{{ url_for('auth.logout') }}" class="btn-link">Log out</a>
     </div>
   </header>
@@ -48,6 +61,19 @@
 
     {% block content %}{% endblock %}
   </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>&copy; {{ current_year }} Ankita's Classes &middot; Confidence is the Curriculum</span>
+      <nav class="footer-links">
+        <a href="{{ url_for('auth.terms') }}">Terms &amp; Conditions</a>
+        <a href="{{ url_for('auth.privacy') }}">Privacy Policy</a>
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('doubts.view') }}">Need Help?</a>
+        {% endif %}
+      </nav>
+    </div>
+  </footer>
 
   <script src="{{ url_for('static', filename='js/toggle_password.js') }}"></script>
 </body>

@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 {% block title %}Request Doubt Session{% endblock %}
 {% block content %}
-<h2>Request a Doubt Clearing Session</h2>
+<div class="page-header">
+  <div>
+    <h2>🙋 Request a Doubt Clearing Session</h2>
+    <p class="page-sub">Describe what you're stuck on and propose a time — your teacher will approve or suggest changes.</p>
+  </div>
+</div>
 <div class="card">
   <form method="post">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 {% block title %}Schedule Session{% endblock %}
 {% block content %}
-<h2>Schedule a Session</h2>
+<div class="page-header">
+  <div>
+    <h2>📅 Schedule a Session</h2>
+    <p class="page-sub">Assigned students will see this session on their calendar and dashboard.</p>
+  </div>
+</div>
 <div class="card">
   <form method="post">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

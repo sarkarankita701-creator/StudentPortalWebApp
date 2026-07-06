@@ -1,16 +1,25 @@
 {% extends "base.html" %}
 {% block title %}Test Result{% endblock %}
 {% block content %}
-<h2>{{ test.title }} &mdash; Result</h2>
-<div class="card">
-  <p><strong>Score:</strong> {{ attempt.score }} / {{ test.total_marks }}
-  {% set pct = (attempt.score / test.total_marks * 100) if test.total_marks else 0 %}
-  ({{ '%.1f'|format(pct) }}%)</p>
-  <p><strong>Submitted:</strong> {{ attempt.submitted_at.strftime('%Y-%m-%d %H:%M') if attempt.submitted_at else '-' }}</p>
+<div class="page-header">
+  <div>
+    <h2>{{ test.title }} &mdash; Result</h2>
+    <p class="page-sub">Submitted: {{ attempt.submitted_at.strftime('%a, %d %b %Y · %H:%M') if attempt.submitted_at else '-' }}</p>
+  </div>
+  <a href="{{ url_for('performance.view') }}" class="btn secondary">View All Results</a>
+</div>
+
+{% set pct = (attempt.score / test.total_marks * 100) if test.total_marks else 0 %}
+<div class="card score-hero">
+  <div class="score-big">{{ attempt.score }} / {{ test.total_marks }}</div>
+  <div class="score-sub">{{ '%.1f'|format(pct) }}% scored</div>
+  <div class="bar-track" style="max-width: 340px; margin: 0.9rem auto 0;">
+    <div class="bar-fill" style="width: {{ pct }}%;"></div>
+  </div>
 </div>
 
 <div class="card">
-  <h3>Answer Review</h3>
+  <h3>📝 Answer Review</h3>
   <table>
     <tr><th>#</th><th>Question</th><th>Your Answer</th><th>Correct Answer</th><th>Result</th></tr>
     {% for ans in attempt.answers %}
@@ -21,7 +30,7 @@
       <td>{{ ans.question.correct_option|upper }}</td>
       <td>
         {% if ans.is_correct %}<span class="badge badge-paid">Correct</span>
-        {% else %}<span class="badge badge-pending">Incorrect</span>{% endif %}
+        {% else %}<span class="badge badge-danger">Incorrect</span>{% endif %}
       </td>
     </tr>
     {% endfor %}

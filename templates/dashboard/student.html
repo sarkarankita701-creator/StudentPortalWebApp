@@ -1,14 +1,19 @@
 {% extends "base.html" %}
 {% block title %}My Dashboard{% endblock %}
 {% block content %}
-<h2>My Dashboard</h2>
+<div class="hero">
+  <h2>Welcome back, {{ current_user.name.split(' ')[0] }} 👋</h2>
+  <p>Here's a quick look at your classes, tests, and payments.</p>
+</div>
+
 <div class="card-grid">
   <div class="stat"><div class="num">{{ counts.pending_tests }}</div><div class="label">Pending Tests</div></div>
   <div class="stat"><div class="num">{{ counts.materials }}</div><div class="label">My Materials</div></div>
   <div class="stat"><div class="num">{{ counts.pending_payments }}</div><div class="label">Pending Payments</div></div>
 </div>
+
 <div class="card">
-  <h3>Upcoming Sessions</h3>
+  <h3>📅 Upcoming Sessions</h3>
   {% if counts.upcoming_events %}
     <table>
       <tr><th>Title</th><th>Subject</th><th>Starts</th><th>Class</th></tr>
@@ -16,7 +21,7 @@
       <tr>
         <td>{{ e.title }}</td>
         <td>{{ e.subject or '-' }}</td>
-        <td>{{ e.start_dt.strftime('%Y-%m-%d %H:%M') }}</td>
+        <td>{{ e.start_dt.strftime('%a, %d %b %Y · %H:%M') }}</td>
         <td>
           {% if e.meet_url %}
           <a href="{{ e.meet_url }}" target="_blank" rel="noopener" class="btn small">Join Class</a>
@@ -26,7 +31,24 @@
       {% endfor %}
     </table>
   {% else %}
-    <p>No upcoming sessions scheduled.</p>
+    <div class="empty-state">
+      <span class="icon">🗓️</span>
+      <p><strong>No upcoming sessions scheduled.</strong></p>
+      <p>New sessions will appear here as soon as your teacher schedules them.</p>
+    </div>
   {% endif %}
+</div>
+
+<div class="card">
+  <h3>⚡ Quick Actions</h3>
+  <div class="quick-actions">
+    <a href="{{ url_for('tests.list_tests') }}" class="btn">Take a Test</a>
+    <a href="{{ url_for('materials.list_materials') }}" class="btn secondary">Browse Materials</a>
+    <a href="{{ url_for('performance.view') }}" class="btn secondary">My Performance</a>
+    <a href="{{ url_for('doubts.new_request') }}" class="btn secondary">Ask a Doubt</a>
+    {% if counts.pending_payments %}
+    <a href="{{ url_for('payments.view') }}" class="btn secondary">Clear Pending Payments</a>
+    {% endif %}
+  </div>
 </div>
 {% endblock %}

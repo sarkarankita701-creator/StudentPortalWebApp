@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 {% block title %}Payments{% endblock %}
 {% block content %}
-<h2>My Payments</h2>
+<div class="page-header">
+  <div>
+    <h2>My Payments</h2>
+    <p class="page-sub">Track your session fees, pay via QR code, and mark payments done for verification.</p>
+  </div>
+</div>
 
 <div class="card-grid">
   <div class="stat"><div class="num">{{ summary.total_sessions }}</div><div class="label">Sessions Engaged</div></div>
@@ -10,7 +15,8 @@
 </div>
 
 <div class="card">
-  <h3>Pay via QR Code</h3>
+  <h3>💳 Pay via QR Code</h3>
+  <p class="page-sub" style="margin-bottom: 0.9rem;">Scan with any UPI app. After paying, click <strong>Payment Done</strong> on the session below — your payment shows as <em>Awaiting Verification</em> until it's confirmed.</p>
   <img src="{{ url_for('static', filename='qr_code.png') }}" class="qr-image" alt="Payment QR code">
 </div>
 
@@ -40,7 +46,9 @@
       </td>
     </tr>
     {% else %}
-    <tr><td colspan="7">No sessions recorded yet.</td></tr>
+    <tr><td colspan="7">
+      <div class="empty-state"><span class="icon">🧾</span><p><strong>No sessions recorded yet.</strong></p><p>Invoices will appear here after your sessions are logged.</p></div>
+    </td></tr>
     {% endfor %}
   </table>
 </div>

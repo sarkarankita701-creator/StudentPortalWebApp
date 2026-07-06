@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Terms &amp; Conditions{% endblock %}
+{% block content %}
+<div class="card legal-card">
+  <h2>Terms &amp; Conditions</h2>
+  <p class="legal-meta">Last updated: 7 July {{ current_year }}</p>
+
+  <p>Welcome to <strong>Ankita's Classes</strong>. By accessing or using this student portal
+  (the "Portal"), you agree to the terms below. If you are under 18, your parent or guardian
+  is responsible for your account and agrees to these terms on your behalf.</p>
+
+  <h3>1. Accounts &amp; Access</h3>
+  <ul>
+    <li>Accounts are created by the administrator for enrolled students and appointed teachers only. You may not share, sell, or transfer your account.</li>
+    <li>You are responsible for keeping your username and password confidential and for all activity that occurs under your account.</li>
+    <li>Notify us immediately if you suspect unauthorised use of your account. We may suspend or deactivate accounts that violate these terms.</li>
+  </ul>
+
+  <h3>2. Classes &amp; Scheduling</h3>
+  <ul>
+    <li>Class sessions, timings, and meeting links are published on the Portal calendar. Timings may occasionally change; please check your dashboard before each session.</li>
+    <li>Meeting links are personal to enrolled students and must not be shared with anyone outside the class.</li>
+    <li>Recording, redistributing, or publicly posting any part of a live class is prohibited without written permission.</li>
+  </ul>
+
+  <h3>3. Study Materials</h3>
+  <ul>
+    <li>All notes, worksheets, presentations, and other materials in the Material Bank are the intellectual property of Ankita's Classes or its teachers.</li>
+    <li>Materials are provided for your personal study only. Copying, reselling, or sharing them outside the Portal is not permitted.</li>
+  </ul>
+
+  <h3>4. Tests &amp; Academic Honesty</h3>
+  <ul>
+    <li>Online tests are timed and auto-submit when the timer ends. Ensure you have a stable internet connection before starting a test.</li>
+    <li>Tests must be attempted individually, without assistance from other people, unauthorised notes, or external tools, unless the test rules say otherwise.</li>
+    <li>Scores and answer reviews are shared with you and your teachers to track progress. Suspected malpractice may lead to a test being voided.</li>
+  </ul>
+
+  <h3>5. Fees &amp; Payments</h3>
+  <ul>
+    <li>Session fees are recorded on the Portal per session, at the rates communicated to you. Any applicable discounts appear on each invoice line.</li>
+    <li>Payments are made via the QR code shown on the Payments page. After paying, use the "Payment Done" button so the payment can be verified.</li>
+    <li>A payment is considered complete only after it is verified and marked "Paid" by the administrator.</li>
+    <li>Fees for conducted sessions are generally non-refundable. If a session is cancelled by the teacher, it will not be billed, or the amount will be adjusted.</li>
+  </ul>
+
+  <h3>6. Doubt Sessions</h3>
+  <ul>
+    <li>Doubt-clearing sessions are subject to teacher availability. A request is confirmed only when its status shows "Approved".</li>
+    <li>Please request doubt sessions reasonably in advance and attend the approved slot punctually.</li>
+  </ul>
+
+  <h3>7. Acceptable Use</h3>
+  <ul>
+    <li>Do not misuse the Portal: no attempts to access other users' data, disrupt the service, upload harmful content, or misrepresent your identity.</li>
+    <li>Be respectful in all interactions with teachers and fellow students.</li>
+  </ul>
+
+  <h3>8. Availability &amp; Liability</h3>
+  <p>We aim to keep the Portal available at all times, but we do not guarantee uninterrupted access. The Portal is provided "as is"; to the maximum extent permitted by law, Ankita's Classes is not liable for indirect or incidental losses arising from its use.</p>
+
+  <h3>9. Changes to These Terms</h3>
+  <p>These terms may be updated from time to time. Continued use of the Portal after an update means you accept the revised terms. Significant changes will be communicated on the Portal.</p>
+
+  <h3>10. Contact</h3>
+  <p>For questions about these terms, fees, or your account, please contact your teacher or the administrator through the Portal.</p>
+
+  <p class="legal-meta">See also our <a href="{{ url_for('auth.privacy') }}">Privacy Policy</a>.</p>
+</div>
+{% endblock %}

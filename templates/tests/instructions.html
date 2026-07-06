@@ -1,25 +1,46 @@
 {% extends "base.html" %}
 {% block title %}{{ test.title }} &mdash; Instructions{% endblock %}
 {% block content %}
-<h2>{{ test.title }}</h2>
+<div class="page-header">
+  <div>
+    <h2>{{ test.title }}</h2>
+    <p class="page-sub">Read the instructions carefully before you begin. The timer starts as soon as you click Start.</p>
+  </div>
+</div>
 
-<div class="card">
-  <p><strong>Duration:</strong> {{ test.duration_minutes }} minutes</p>
-  <p><strong>Total Marks:</strong> {{ test.total_marks }}</p>
-  <p><strong>Questions:</strong> {{ test.questions|length }}</p>
+<div class="card-grid">
+  <div class="stat"><div class="num">{{ test.duration_minutes }}</div><div class="label">Minutes</div></div>
+  <div class="stat"><div class="num">{{ test.questions|length }}</div><div class="label">Questions</div></div>
+  <div class="stat"><div class="num">{{ test.total_marks }}</div><div class="label">Total Marks</div></div>
 </div>
 
 <div class="card">
-  <h3>Rules / Instructions</h3>
+  <h3>📋 Rules &amp; Instructions</h3>
   {% if test.rules %}
   <p style="white-space: pre-wrap;">{{ test.rules }}</p>
   {% else %}
   <p>No special instructions for this test. Answer every question before the timer runs out &mdash; the test auto-submits when time is up.</p>
   {% endif %}
+  <ul class="page-sub" style="line-height: 1.9;">
+    <li>Once started, the timer keeps running even if you close the page.</li>
+    <li>Make sure you have a stable internet connection before starting.</li>
+    <li>The test auto-submits when the timer reaches zero — unanswered questions score no marks.</li>
+  </ul>
 </div>
 
 <form method="post" action="{{ url_for('tests.start_test', test_id=test.id) }}">
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-  <button type="submit" class="btn">Start Test</button>
+  <div class="form-group">
+    <label style="display:flex; align-items:center; gap:0.55rem; font-weight:500; cursor:pointer;">
+      <input type="checkbox" id="agree-rules" style="width:auto;"> I have read and understood the rules above.
+    </label>
+  </div>
+  <button type="submit" class="btn" id="start-btn" disabled>Start Test ▶</button>
 </form>
+
+<script>
+  document.getElementById("agree-rules").addEventListener("change", function () {
+    document.getElementById("start-btn").disabled = !this.checked;
+  });
+</script>
 {% endblock %}

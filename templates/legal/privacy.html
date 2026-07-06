@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Privacy Policy{% endblock %}
+{% block content %}
+<div class="card legal-card">
+  <h2>Privacy Policy</h2>
+  <p class="legal-meta">Last updated: 7 July {{ current_year }}</p>
+
+  <p><strong>Ankita's Classes</strong> respects your privacy. This policy explains what
+  information the student portal collects, how it is used, and the choices you have.</p>
+
+  <h3>1. Information We Collect</h3>
+  <ul>
+    <li><strong>Account details</strong> — your name, username, email address (if provided), and role (student or teacher), created by the administrator.</li>
+    <li><strong>Academic data</strong> — test attempts, answers, scores, assigned materials, and performance history.</li>
+    <li><strong>Scheduling data</strong> — class sessions assigned to you and doubt-session requests you make.</li>
+    <li><strong>Payment records</strong> — session invoices, amounts, discounts, and payment status. We do <em>not</em> store card numbers, UPI PINs, or bank credentials; payments happen in your own payment app via QR code.</li>
+  </ul>
+
+  <h3>2. How We Use It</h3>
+  <ul>
+    <li>To run your classes: scheduling sessions, sharing materials, conducting tests, and tracking your performance over time.</li>
+    <li>To manage fees: raising session invoices and verifying payments.</li>
+    <li>To keep the Portal secure and to communicate important updates about your classes.</li>
+  </ul>
+
+  <h3>3. Who Can See Your Data</h3>
+  <ul>
+    <li><strong>You</strong> can see your own schedule, materials, results, and payment history.</li>
+    <li><strong>Teachers</strong> can see the academic data of students they teach, to guide their teaching.</li>
+    <li><strong>The administrator</strong> can see account, academic, and payment data needed to run the institute.</li>
+    <li>We do not sell your data or share it with third parties for advertising. Class meetings run on Google Meet, which is governed by Google's own privacy policy.</li>
+  </ul>
+
+  <h3>4. Data Security</h3>
+  <ul>
+    <li>Passwords are stored in hashed form and are never visible to anyone, including the administrator.</li>
+    <li>Access to the Portal requires login, and every page is restricted by role.</li>
+    <li>Choose a strong password and never share it. Log out when using a shared device.</li>
+  </ul>
+
+  <h3>5. Data Retention</h3>
+  <p>Academic and payment records are retained while you are enrolled so that your performance history and accounts remain accurate. When an account is deactivated, its data is retained only as long as needed for record-keeping and legal purposes.</p>
+
+  <h3>6. Your Choices</h3>
+  <ul>
+    <li>You may ask the administrator to correct inaccurate account details.</li>
+    <li>You may request a copy of your performance or payment history at any time.</li>
+    <li>Parents or guardians of minors may raise any privacy concern directly with the administrator.</li>
+  </ul>
+
+  <h3>7. Changes to This Policy</h3>
+  <p>We may update this policy occasionally. Meaningful changes will be announced on the Portal, and the "Last updated" date above will change.</p>
+
+  <h3>8. Contact</h3>
+  <p>For any privacy question or request, please contact the administrator through the Portal.</p>
+
+  <p class="legal-meta">See also our <a href="{{ url_for('auth.terms') }}">Terms &amp; Conditions</a>.</p>
+</div>
+{% endblock %}

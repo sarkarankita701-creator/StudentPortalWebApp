@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 {% block title %}My Tests{% endblock %}
 {% block content %}
-<h2>My Tests</h2>
+<div class="page-header">
+  <div>
+    <h2>My Tests</h2>
+    <p class="page-sub">Tests assigned to you. Read the instructions carefully before starting — each test is timed.</p>
+  </div>
+</div>
 <div class="card">
   <table>
     <tr><th>Title</th><th>Duration</th><th>Status</th><th></th></tr>
@@ -27,7 +32,9 @@
       </td>
     </tr>
     {% else %}
-    <tr><td colspan="4">No tests assigned yet.</td></tr>
+    <tr><td colspan="4">
+      <div class="empty-state"><span class="icon">🎯</span><p><strong>No tests assigned yet.</strong></p><p>Your teacher will assign tests here when they're ready.</p></div>
+    </td></tr>
     {% endfor %}
   </table>
 </div>

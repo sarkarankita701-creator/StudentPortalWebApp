@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 {% block title %}{{ test.title }}{% endblock %}
 {% block content %}
-<h2>{{ test.title }}</h2>
+<div class="page-header">
+  <div>
+    <h2>{{ test.title }}</h2>
+    <p class="page-sub">{{ test.questions|length }} questions · {{ test.total_marks }} marks · auto-submits when time runs out</p>
+  </div>
+</div>
 <div id="timer-display" class="timer-box"></div>
 
 <form id="test-form" method="post" action="{{ url_for('tests.submit_test', test_id=test.id) }}">
@@ -10,8 +15,8 @@
   <div class="card">
     <p><strong>Q{{ loop.index }}.</strong> {{ q.question_text }} <em>({{ q.marks }} mark{{ 's' if q.marks != 1 }})</em></p>
     {% for opt in ['a', 'b', 'c', 'd'] %}
-    <label style="display:block; margin-bottom:0.4rem;">
-      <input type="radio" name="question_{{ q.id }}" value="{{ opt }}"> {{ opt|upper }}. {{ q['option_' + opt] }}
+    <label class="option-label">
+      <input type="radio" name="question_{{ q.id }}" value="{{ opt }}"> <span><strong>{{ opt|upper }}.</strong> {{ q['option_' + opt] }}</span>
     </label>
     {% endfor %}
   </div>

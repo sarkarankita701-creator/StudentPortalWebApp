@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 {% block title %}Admin Dashboard{% endblock %}
 {% block content %}
-<h2>Super Admin Dashboard</h2>
+<div class="hero">
+  <h2>Super Admin Dashboard</h2>
+  <p>Everything across the institute — people, sessions, content, and finances.</p>
+</div>
+
 <div class="card-grid">
   <div class="stat"><div class="num">{{ counts.teachers }}</div><div class="label">Teachers</div></div>
   <div class="stat"><div class="num">{{ counts.students }}</div><div class="label">Students</div></div>
@@ -9,8 +13,18 @@
   <div class="stat"><div class="num">{{ counts.materials }}</div><div class="label">Materials</div></div>
   <div class="stat"><div class="num">{{ counts.tests }}</div><div class="label">Tests</div></div>
 </div>
+
 <div class="card">
-  <p>Use <a href="{{ url_for('admin.users') }}">Users</a> to create Teacher and Student accounts, and
-  <a href="{{ url_for('admin.settings') }}">Settings</a> to update the payment QR code and default pricing.</p>
+  <h3>⚡ Quick Actions</h3>
+  <div class="quick-actions">
+    <a href="{{ url_for('admin.users') }}" class="btn">Manage Users</a>
+    <a href="{{ url_for('admin.finance') }}" class="btn secondary">Financial Dashboard</a>
+    <a href="{{ url_for('admin.settings') }}" class="btn secondary">Payment Settings</a>
+    <a href="{{ url_for('calendar.list_events') }}" class="btn secondary">View Calendar</a>
+  </div>
+  <p class="page-sub" style="margin-top: 1rem;">
+    Use <strong>Users</strong> to create teacher and student accounts, and <strong>Settings</strong>
+    to update the payment QR code and default session pricing.
+  </p>
 </div>
 {% endblock %}

@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 {% block title %}Create Test{% endblock %}
 {% block content %}
-<h2>Create Test</h2>
+<div class="page-header">
+  <div>
+    <h2>📝 Create Test</h2>
+    <p class="page-sub">Set the basics here — you'll add questions and assign students on the next screen.</p>
+  </div>
+</div>
 <div class="card">
   <form method="post">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

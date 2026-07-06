@@ -2,7 +2,10 @@
 {% block title %}Calendar{% endblock %}
 {% block content %}
 <div class="page-header">
-  <h2>{{ month_name }} {{ year }}</h2>
+  <div>
+    <h2>📅 {{ month_name }} {{ year }}</h2>
+    <p class="page-sub">All scheduled class sessions. Click a meeting link to join at the scheduled time.</p>
+  </div>
   {% if current_user.is_teacher() or current_user.is_super_admin() %}
   <a href="{{ url_for('calendar.new_event') }}" class="btn">+ Schedule Session</a>
   {% endif %}

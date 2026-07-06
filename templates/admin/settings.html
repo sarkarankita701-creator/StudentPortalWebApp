@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 {% block title %}Settings{% endblock %}
 {% block content %}
-<h2>Payment Settings</h2>
+<div class="page-header">
+  <div>
+    <h2>⚙️ Payment Settings</h2>
+    <p class="page-sub">Set the default per-session price and upload the QR code students scan to pay.</p>
+  </div>
+</div>
 <div class="card">
   <form method="post" enctype="multipart/form-data">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

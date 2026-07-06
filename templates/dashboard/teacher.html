@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 {% block title %}Teacher Dashboard{% endblock %}
 {% block content %}
-<h2>Teacher Dashboard</h2>
+<div class="hero">
+  <h2>Welcome back, {{ current_user.name.split(' ')[0] }} 👋</h2>
+  <p>Your teaching activity at a glance — sessions, materials, tests, and doubt requests.</p>
+</div>
+
 <div class="card-grid">
   <div class="stat"><div class="num">{{ counts.events }}</div><div class="label">My Events</div></div>
   <div class="stat"><div class="num">{{ counts.materials }}</div><div class="label">My Materials</div></div>
@@ -9,14 +13,22 @@
   <div class="stat"><div class="num">{{ counts.students }}</div><div class="label">Students in System</div></div>
   <div class="stat"><div class="num">{{ counts.pending_doubts }}</div><div class="label">Pending Doubt Requests</div></div>
 </div>
+
+{% if counts.pending_doubts %}
+<div class="notice">
+  <span>🙋</span>
+  <span>You have <strong>{{ counts.pending_doubts }}</strong> doubt request{{ 's' if counts.pending_doubts != 1 }} waiting for a response.
+  <a href="{{ url_for('doubts.view') }}">Review now</a>.</span>
+</div>
+{% endif %}
+
 <div class="card">
-  <p>
+  <h3>⚡ Quick Actions</h3>
+  <div class="quick-actions">
     <a href="{{ url_for('calendar.new_event') }}" class="btn">+ Schedule Session</a>
     <a href="{{ url_for('materials.new_material') }}" class="btn secondary">+ Add Material</a>
     <a href="{{ url_for('tests.new_test') }}" class="btn secondary">+ Create Test</a>
-    {% if counts.pending_doubts %}
-    <a href="{{ url_for('doubts.view') }}" class="btn secondary">Review Doubt Requests</a>
-    {% endif %}
-  </p>
+    <a href="{{ url_for('performance.view') }}" class="btn secondary">Track Performance</a>
+  </div>
 </div>
 {% endblock %}

@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 {% block title %}Manage Users{% endblock %}
 {% block content %}
-<h2>Manage Users</h2>
+<div class="page-header">
+  <div>
+    <h2>👥 Manage Users</h2>
+    <p class="page-sub">Create teacher and student accounts, and activate or deactivate access at any time.</p>
+  </div>
+</div>
 
 <div class="card">
   <h3>Create Account</h3>
@@ -34,6 +39,39 @@
       </select>
     </div>
     <button type="submit" class="btn">Create Account</button>
+  </form>
+</div>
+
+<div class="card">
+  <h3>🔑 Reset a Password</h3>
+  <p class="page-sub" style="margin-bottom: 1rem;">Directly set a new password for any teacher or student — no old password needed. Share the new password with them securely.</p>
+  <form method="post" action="{{ url_for('admin.reset_password') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+      <label>Account</label>
+      <select name="user_id" required>
+        <option value="">-- choose an account --</option>
+        <optgroup label="Teachers">
+          {% for t in teachers %}
+          <option value="{{ t.id }}">{{ t.name }} ({{ t.username }})</option>
+          {% endfor %}
+        </optgroup>
+        <optgroup label="Students">
+          {% for s in students %}
+          <option value="{{ s.id }}">{{ s.name }} ({{ s.username }})</option>
+          {% endfor %}
+        </optgroup>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>New Password</label>
+      <div class="password-wrap">
+        <input type="password" name="new_password" id="reset-password-field" minlength="6" required placeholder="Minimum 6 characters">
+        <button type="button" class="btn small secondary toggle-password" data-target="reset-password-field">Show</button>
+      </div>
+      <p class="form-hint">Takes effect from their next login. The old password stops working immediately.</p>
+    </div>
+    <button type="submit" class="btn" onclick="return confirm('Reset this account\'s password?');">Reset Password</button>
   </form>
 </div>
 

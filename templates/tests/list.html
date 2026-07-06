@@ -2,7 +2,10 @@
 {% block title %}Test Portal{% endblock %}
 {% block content %}
 <div class="page-header">
-  <h2>Test Portal</h2>
+  <div>
+    <h2>Test Portal</h2>
+    <p class="page-sub">Create, publish, and manage tests. Students only see published tests assigned to them.</p>
+  </div>
   {% if current_user.is_teacher() %}
   <a href="{{ url_for('tests.new_test') }}" class="btn">+ Create Test</a>
   {% endif %}
@@ -27,7 +30,9 @@
       </td>
     </tr>
     {% else %}
-    <tr><td colspan="5">No tests yet.</td></tr>
+    <tr><td colspan="5">
+      <div class="empty-state"><span class="icon">📝</span><p><strong>No tests yet.</strong></p><p>Created tests will show up here.</p></div>
+    </td></tr>
     {% endfor %}
   </table>
 </div>

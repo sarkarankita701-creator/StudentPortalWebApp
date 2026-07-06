@@ -2,7 +2,12 @@
 {% block title %}Manage Test{% endblock %}
 {% block content %}
 <div class="page-header">
-  <h2>{{ test.title }}</h2>
+  <div>
+    <h2>{{ test.title }}</h2>
+    <p class="page-sub">Duration: {{ test.duration_minutes }} minutes &middot; Total marks: {{ test.total_marks }} &middot;
+      {% if test.is_published %}<span class="badge badge-published">Published</span>{% else %}<span class="badge badge-draft">Draft</span>{% endif %}
+    </p>
+  </div>
   <form method="post" action="{{ url_for('tests.publish_test', test_id=test.id) }}">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <button type="submit" class="btn {{ 'secondary' if test.is_published else '' }}">
@@ -10,10 +15,6 @@
     </button>
   </form>
 </div>
-<p>Duration: {{ test.duration_minutes }} minutes &middot; Total marks: {{ test.total_marks }} &middot;
-  Status: {% if test.is_published %}<span class="badge badge-published">Published</span>{% else %}<span class="badge badge-draft">Draft</span>{% endif %}
-</p>
-
 <div class="card">
   <h3>Rules / Instructions</h3>
   <p>Shown to students on a confirmation page before they start the timer.</p>

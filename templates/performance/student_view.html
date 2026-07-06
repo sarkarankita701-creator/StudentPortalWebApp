@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 {% block title %}My Performance{% endblock %}
 {% block content %}
-<h2>My Performance</h2>
+<div class="page-header">
+  <div>
+    <h2>My Performance</h2>
+    <p class="page-sub">Your completed tests, scores, and overall average — watch your progress grow.</p>
+  </div>
+</div>
 <div class="card-grid">
   <div class="stat"><div class="num">{{ rows|length }}</div><div class="label">Tests Completed</div></div>
   <div class="stat"><div class="num">{{ avg_pct }}%</div><div class="label">Average Score</div></div>
@@ -22,7 +27,9 @@
       <td><a href="{{ url_for('tests.result', test_id=r.test.id) }}" class="btn small secondary">Review</a></td>
     </tr>
     {% else %}
-    <tr><td colspan="5">No completed tests yet.</td></tr>
+    <tr><td colspan="5">
+      <div class="empty-state"><span class="icon">📈</span><p><strong>No completed tests yet.</strong></p><p>Finish a test in the Test Portal and your results will appear here.</p></div>
+    </td></tr>
     {% endfor %}
   </table>
 </div>

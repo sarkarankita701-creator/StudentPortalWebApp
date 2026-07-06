@@ -48,6 +48,28 @@ def create_user():
     return redirect(url_for("admin.users"))
 
 
+@admin_bp.route("/users/reset-password", methods=["POST"])
+@login_required
+@role_required(ROLE_SUPER_ADMIN)
+def reset_password():
+    user_id = request.form.get("user_id", "")
+    new_password = request.form.get("new_password", "")
+
+    user = User.query.get(user_id) if user_id.isdigit() else None
+    if not user or user.role == ROLE_SUPER_ADMIN:
+        flash("Select a valid teacher or student account.", "error")
+        return redirect(url_for("admin.users"))
+
+    if len(new_password) < 6:
+        flash("New password must be at least 6 characters.", "error")
+        return redirect(url_for("admin.users"))
+
+    user.set_password(new_password)
+    db.session.commit()
+    flash(f"Password reset for {user.name} ({user.username}). Share it with them securely.", "success")
+    return redirect(url_for("admin.users"))
+
+
 @admin_bp.route("/users/<int:user_id>/toggle", methods=["POST"])
 @login_required
 @role_required(ROLE_SUPER_ADMIN)

@@ -2,7 +2,10 @@
 {% block title %}Doubt Sessions{% endblock %}
 {% block content %}
 <div class="page-header">
-  <h2>My Doubt Session Requests</h2>
+  <div>
+    <h2>🙋 My Doubt Session Requests</h2>
+    <p class="page-sub">Stuck on a topic? Request a one-on-one session and your teacher will respond here.</p>
+  </div>
   <a href="{{ url_for('doubts.new_request') }}" class="btn">+ Request Doubt Session</a>
 </div>
 
@@ -21,7 +24,9 @@
       </td>
     </tr>
     {% else %}
-    <tr><td colspan="4">You haven't requested any doubt sessions yet.</td></tr>
+    <tr><td colspan="4">
+      <div class="empty-state"><span class="icon">💬</span><p><strong>You haven't requested any doubt sessions yet.</strong></p><p>Use the button above to ask your teacher for a one-on-one session.</p></div>
+    </td></tr>
     {% endfor %}
   </table>
 </div>

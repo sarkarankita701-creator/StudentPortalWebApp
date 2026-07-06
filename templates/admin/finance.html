@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 {% block title %}Financial Dashboard{% endblock %}
 {% block content %}
-<h2>Financial Dashboard</h2>
+<div class="page-header">
+  <div>
+    <h2>💰 Financial Dashboard</h2>
+    <p class="page-sub">Collections, outstanding dues, and recent transactions across all students.</p>
+  </div>
+</div>
 
 <div class="card-grid">
   <div class="stat"><div class="num">Rs. {{ '%.2f'|format(summary.total_collected) }}</div><div class="label">Total Collected</div></div>

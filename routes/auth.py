@@ -53,6 +53,16 @@ def login():
     return render_template("auth/login.html", form=form)
 
 
+@auth_bp.route("/terms")
+def terms():
+    return render_template("legal/terms.html")
+
+
+@auth_bp.route("/privacy")
+def privacy():
+    return render_template("legal/privacy.html")
+
+
 @auth_bp.route("/logout")
 @login_required
 def logout():
