@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Calendar{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>{{ month_name }} {{ year }}</h2>
+  {% if current_user.is_teacher() or current_user.is_super_admin() %}
+  <a href="{{ url_for('calendar.new_event') }}" class="btn">+ Schedule Session</a>
+  {% endif %}
+</div>
+
+<div class="calendar-header">
+  <a href="{{ url_for('calendar.list_events', year=prev_year, month=prev_month) }}" class="btn small secondary">&laquo; Prev</a>
+  <a href="{{ url_for('calendar.list_events') }}" class="btn small secondary">Today</a>
+  <a href="{{ url_for('calendar.list_events', year=next_year, month=next_month) }}" class="btn small secondary">Next &raquo;</a>
+</div>
+
+<div class="calendar-grid">
+  {% for label in ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'] %}
+  <div class="weekday-label">{{ label }}</div>
+  {% endfor %}
+
+  {% for week in weeks %}
+    {% for day in week %}
+      <div class="calendar-day {% if day == 0 %}other-month{% endif %}">
+        {% if day != 0 %}
+          <div class="daynum">{{ day }}</div>
+          {% for e in events_by_day.get(day, []) %}
+            <div class="calendar-event">
+              <strong>{{ e.start_dt.strftime('%H:%M') }}&ndash;{{ e.end_dt.strftime('%H:%M') }}</strong> {{ e.title }}
+              {% if e.meet_url %}
+                <br><a href="{{ e.meet_url }}" target="_blank" rel="noopener" class="btn small">Join Class</a>
+              {% endif %}
+              {% if current_user.is_super_admin() or (current_user.is_teacher() and e.teacher_id == current_user.id) %}
+                <form class="inline" method="post" action="{{ url_for('calendar.delete_event', event_id=e.id) }}" onsubmit="return confirm('Remove this session?');">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button type="submit" class="btn small danger">Delete</button>
+                </form>
+              {% endif %}
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% endfor %}
+</div>
+{% endblock %}

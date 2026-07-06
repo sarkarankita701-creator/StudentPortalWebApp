@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ test.title }}{% endblock %}
+{% block content %}
+<h2>{{ test.title }}</h2>
+<div id="timer-display" class="timer-box"></div>
+
+<form id="test-form" method="post" action="{{ url_for('tests.submit_test', test_id=test.id) }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  {% for q in test.questions %}
+  <div class="card">
+    <p><strong>Q{{ loop.index }}.</strong> {{ q.question_text }} <em>({{ q.marks }} mark{{ 's' if q.marks != 1 }})</em></p>
+    {% for opt in ['a', 'b', 'c', 'd'] %}
+    <label style="display:block; margin-bottom:0.4rem;">
+      <input type="radio" name="question_{{ q.id }}" value="{{ opt }}"> {{ opt|upper }}. {{ q['option_' + opt] }}
+    </label>
+    {% endfor %}
+  </div>
+  {% endfor %}
+  <button type="submit" class="btn">Submit Test</button>
+</form>
+
+<script src="{{ url_for('static', filename='js/test_timer.js') }}"></script>
+<script>
+  initTestTimer({{ remaining_seconds }}, "test-form", "timer-display");
+</script>
+{% endblock %}

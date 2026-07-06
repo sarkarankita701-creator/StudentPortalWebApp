@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Request Doubt Session{% endblock %}
+{% block content %}
+<h2>Request a Doubt Clearing Session</h2>
+<div class="card">
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+      <label>Teacher</label>
+      <select name="teacher_id" required>
+        <option value="">-- select a teacher --</option>
+        {% for t in teachers %}
+        <option value="{{ t.id }}">{{ t.name }} ({{ t.username }})</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>What's your doubt about?</label>
+      <textarea name="topic" rows="3" required placeholder="e.g. Struggling with quadratic equations, chapter 4"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Preferred Date &amp; Time</label>
+      <input type="datetime-local" name="proposed_dt" required>
+    </div>
+    <div class="form-group">
+      <label>Duration</label>
+      <select name="duration_minutes" required>
+        <option value="30" selected>30 minutes</option>
+        <option value="45">45 minutes</option>
+        <option value="60">1 hour</option>
+      </select>
+    </div>
+    <button type="submit" class="btn">Send Request</button>
+  </form>
+</div>
+{% endblock %}

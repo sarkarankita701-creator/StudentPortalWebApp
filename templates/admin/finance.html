@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Financial Dashboard{% endblock %}
+{% block content %}
+<h2>Financial Dashboard</h2>
+
+<div class="card-grid">
+  <div class="stat"><div class="num">Rs. {{ '%.2f'|format(summary.total_collected) }}</div><div class="label">Total Collected</div></div>
+  <div class="stat"><div class="num">Rs. {{ '%.2f'|format(summary.total_outstanding) }}</div><div class="label">Total Outstanding</div></div>
+  <div class="stat"><div class="num">Rs. {{ '%.2f'|format(summary.total_awaiting) }}</div><div class="label">Awaiting Verification</div></div>
+  <div class="stat"><div class="num">{{ summary.transaction_count }}</div><div class="label">Total Transactions</div></div>
+</div>
+
+<div class="card-grid">
+  <div class="stat"><div class="num">{{ summary.paid_count }}</div><div class="label">Paid Sessions</div></div>
+  <div class="stat"><div class="num">{{ summary.awaiting_count }}</div><div class="label">Awaiting Verification</div></div>
+  <div class="stat"><div class="num">{{ summary.pending_count }}</div><div class="label">Pending Sessions</div></div>
+</div>
+
+<div class="card">
+  <h3>Recent Transactions</h3>
+  <table>
+    <tr><th>Student</th><th>Session</th><th>Invoice Date</th><th>Amount</th><th>Status</th></tr>
+    {% for r in recent_records %}
+    <tr>
+      <td>{{ r.student.name }}</td>
+      <td>{{ r.session_label }}</td>
+      <td>{{ r.invoice_date.strftime('%Y-%m-%d') }}</td>
+      <td>Rs. {{ '%.2f'|format(r.amount) }}</td>
+      <td>
+        {% if r.status == 'paid' %}<span class="badge badge-paid">Paid</span>
+        {% elif r.status == 'awaiting_verification' %}<span class="badge badge-pending">Awaiting Verification</span>
+        {% else %}<span class="badge badge-pending">Pending</span>{% endif %}
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5">No payment records yet.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

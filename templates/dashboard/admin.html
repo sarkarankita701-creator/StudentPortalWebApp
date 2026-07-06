@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<h2>Super Admin Dashboard</h2>
+<div class="card-grid">
+  <div class="stat"><div class="num">{{ counts.teachers }}</div><div class="label">Teachers</div></div>
+  <div class="stat"><div class="num">{{ counts.students }}</div><div class="label">Students</div></div>
+  <div class="stat"><div class="num">{{ counts.events }}</div><div class="label">Calendar Events</div></div>
+  <div class="stat"><div class="num">{{ counts.materials }}</div><div class="label">Materials</div></div>
+  <div class="stat"><div class="num">{{ counts.tests }}</div><div class="label">Tests</div></div>
+</div>
+<div class="card">
+  <p>Use <a href="{{ url_for('admin.users') }}">Users</a> to create Teacher and Student accounts, and
+  <a href="{{ url_for('admin.settings') }}">Settings</a> to update the payment QR code and default pricing.</p>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Ankita's Classes{% endblock %} &middot; Ankita's Classes</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  {% if current_user.is_authenticated %}
+  <header class="topbar">
+    <div class="brand">
+      Ankita's Classes
+      <div class="tagline">Confidence is the Curriculum</div>
+    </div>
+    <nav class="navlinks">
+      <a href="{{ url_for('auth.dashboard') }}">Dashboard</a>
+      <a href="{{ url_for('calendar.list_events') }}">Calendar</a>
+      <a href="{{ url_for('materials.list_materials') }}">Material Bank</a>
+      <a href="{{ url_for('tests.list_tests') }}">Test Portal</a>
+      <a href="{{ url_for('performance.view') }}">Performance</a>
+      <a href="{{ url_for('payments.view') }}">Payments</a>
+      <a href="{{ url_for('doubts.view') }}">Doubt Sessions</a>
+      {% if current_user.is_teacher() %}
+      <a href="{{ url_for('teacher.settings') }}">My Settings</a>
+      {% endif %}
+      {% if current_user.is_super_admin() %}
+      <a href="{{ url_for('admin.users') }}">Users</a>
+      <a href="{{ url_for('admin.finance') }}">Finance</a>
+      <a href="{{ url_for('admin.settings') }}">Settings</a>
+      {% endif %}
+    </nav>
+    <div class="userbox">
+      <span>{{ current_user.name }} <small>({{ current_user.role.replace('_', ' ') }})</small></span>
+      <a href="{{ url_for('auth.logout') }}" class="btn-link">Log out</a>
+    </div>
+  </header>
+  {% endif %}
+
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <script src="{{ url_for('static', filename='js/toggle_password.js') }}"></script>
+</body>
+</html>

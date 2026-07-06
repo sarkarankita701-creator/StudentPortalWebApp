@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Test Portal{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>Test Portal</h2>
+  {% if current_user.is_teacher() %}
+  <a href="{{ url_for('tests.new_test') }}" class="btn">+ Create Test</a>
+  {% endif %}
+</div>
+
+<div class="card">
+  <table>
+    <tr><th>Title</th><th>Duration</th><th>Questions</th><th>Status</th><th></th></tr>
+    {% for t in tests %}
+    <tr>
+      <td>{{ t.title }}</td>
+      <td>{{ t.duration_minutes }} min</td>
+      <td>{{ t.questions|length }}</td>
+      <td>
+        {% if t.is_published %}<span class="badge badge-published">Published</span>
+        {% else %}<span class="badge badge-draft">Draft</span>{% endif %}
+      </td>
+      <td>
+        {% if current_user.is_super_admin() or (current_user.is_teacher() and t.teacher_id == current_user.id) %}
+        <a href="{{ url_for('tests.manage_test', test_id=t.id) }}" class="btn small secondary">Manage</a>
+        {% endif %}
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5">No tests yet.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

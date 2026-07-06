@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}My Tests{% endblock %}
+{% block content %}
+<h2>My Tests</h2>
+<div class="card">
+  <table>
+    <tr><th>Title</th><th>Duration</th><th>Status</th><th></th></tr>
+    {% for row in rows %}
+    <tr>
+      <td>{{ row.test.title }}</td>
+      <td>{{ row.test.duration_minutes }} min</td>
+      <td>
+        {% if row.attempt and row.attempt.status == 'completed' %}
+          <span class="badge badge-paid">Completed &mdash; {{ row.attempt.score }}/{{ row.test.total_marks }}</span>
+        {% elif row.attempt %}
+          <span class="badge badge-pending">In Progress</span>
+        {% else %}
+          <span class="badge badge-pending">Not Started</span>
+        {% endif %}
+      </td>
+      <td>
+        {% if row.attempt and row.attempt.status == 'completed' %}
+          <a href="{{ url_for('tests.result', test_id=row.test.id) }}" class="btn small secondary">View Result</a>
+        {% else %}
+          <a href="{{ url_for('tests.take_test', test_id=row.test.id) }}" class="btn small">{{ 'Resume' if row.attempt else 'Start Test' }}</a>
+        {% endif %}
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4">No tests assigned yet.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

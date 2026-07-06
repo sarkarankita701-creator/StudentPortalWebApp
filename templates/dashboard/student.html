@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}My Dashboard{% endblock %}
+{% block content %}
+<h2>My Dashboard</h2>
+<div class="card-grid">
+  <div class="stat"><div class="num">{{ counts.pending_tests }}</div><div class="label">Pending Tests</div></div>
+  <div class="stat"><div class="num">{{ counts.materials }}</div><div class="label">My Materials</div></div>
+  <div class="stat"><div class="num">{{ counts.pending_payments }}</div><div class="label">Pending Payments</div></div>
+</div>
+<div class="card">
+  <h3>Upcoming Sessions</h3>
+  {% if counts.upcoming_events %}
+    <table>
+      <tr><th>Title</th><th>Subject</th><th>Starts</th><th>Class</th></tr>
+      {% for e in counts.upcoming_events %}
+      <tr>
+        <td>{{ e.title }}</td>
+        <td>{{ e.subject or '-' }}</td>
+        <td>{{ e.start_dt.strftime('%Y-%m-%d %H:%M') }}</td>
+        <td>
+          {% if e.meet_url %}
+          <a href="{{ e.meet_url }}" target="_blank" rel="noopener" class="btn small">Join Class</a>
+          {% else %}-{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>No upcoming sessions scheduled.</p>
+  {% endif %}
+</div>
+{% endblock %}

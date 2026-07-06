@@ -1,0 +1,155 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: #f4f6f8;
+  color: #1a1f27;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #1f2a44;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.brand { font-weight: 700; font-size: 1.1rem; }
+.brand .tagline { font-weight: 400; font-size: 0.72rem; color: #9fb0d0; margin-top: 0.1rem; }
+
+.navlinks a {
+  color: #cfd8ea;
+  text-decoration: none;
+  margin-right: 1rem;
+  font-size: 0.92rem;
+}
+
+.navlinks a:hover { color: #fff; }
+
+.userbox { display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem; }
+
+.btn-link { color: #ffb4b4; text-decoration: none; }
+
+.container { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
+
+.flash {
+  padding: 0.7rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.92rem;
+}
+.flash-error { background: #fde2e2; color: #9b1c1c; }
+.flash-success { background: #dcf5e3; color: #196c34; }
+
+.card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  margin-bottom: 1.25rem;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+.stat {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+.stat .num { font-size: 1.8rem; font-weight: 700; color: #1f2a44; }
+.stat .label { font-size: 0.85rem; color: #666; }
+
+table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; }
+th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid #eee; font-size: 0.92rem; }
+th { background: #eef1f6; }
+
+form.inline { display: inline; }
+
+.btn {
+  display: inline-block;
+  background: #2955c9;
+  color: #fff;
+  border: none;
+  padding: 0.55rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.btn:hover { background: #1f42a0; }
+.btn.secondary { background: #6b7280; }
+.btn.danger { background: #c0392b; }
+.btn.small { padding: 0.3rem 0.6rem; font-size: 0.8rem; }
+
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; margin-bottom: 0.3rem; font-weight: 600; font-size: 0.88rem; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d0d5dd;
+  border-radius: 6px;
+  font-size: 0.92rem;
+}
+
+.checkbox-list { display: flex; flex-direction: column; gap: 0.35rem; max-height: 220px; overflow-y: auto; border: 1px solid #eee; padding: 0.6rem; border-radius: 6px; }
+.checkbox-list label { font-weight: normal; display: flex; gap: 0.5rem; align-items: center; }
+
+.login-wrap { max-width: 380px; margin: 4rem auto; }
+.login-brand { text-align: center; margin-bottom: 1.5rem; }
+.login-brand h1 { margin-bottom: 0.2rem; color: #1f2a44; }
+.login-brand .tagline { color: #666; font-style: italic; margin: 0; }
+
+.password-wrap { display: flex; gap: 0.4rem; }
+.password-wrap input { flex: 1; }
+
+.badge { display: inline-block; padding: 0.15rem 0.55rem; border-radius: 999px; font-size: 0.78rem; }
+.badge-paid { background: #dcf5e3; color: #196c34; }
+.badge-pending { background: #fff3cd; color: #916b00; }
+.badge-published { background: #dcf5e3; color: #196c34; }
+.badge-draft { background: #eee; color: #666; }
+
+.bar-track { background: #eef1f6; border-radius: 6px; height: 14px; overflow: hidden; }
+.bar-fill { background: #2955c9; height: 100%; }
+
+.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.calendar-day {
+  background: #fff;
+  border-radius: 8px;
+  min-height: 100px;
+  padding: 0.4rem;
+  font-size: 0.8rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+.calendar-day.other-month { opacity: 0.4; }
+.calendar-day .daynum { font-weight: 700; margin-bottom: 0.3rem; }
+.calendar-event { background: #e8edfb; border-radius: 4px; padding: 0.2rem 0.35rem; margin-bottom: 0.25rem; font-size: 0.75rem; }
+.calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.weekday-label { text-align: center; font-weight: 700; font-size: 0.8rem; color: #666; padding-bottom: 0.3rem; }
+
+.timer-box {
+  position: sticky;
+  top: 0;
+  background: #1f2a44;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1rem;
+  z-index: 10;
+}
+
+.qr-image { max-width: 220px; border-radius: 8px; border: 1px solid #eee; }
+
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }

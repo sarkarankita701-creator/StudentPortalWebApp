@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Doubt Sessions{% endblock %}
+{% block content %}
+<h2>Doubt Session Requests</h2>
+
+<div class="card">
+  <h3>Pending Requests</h3>
+  <table>
+    <tr><th>Student</th><th>Topic</th><th>Proposed Time</th><th></th></tr>
+    {% for r in pending %}
+    <tr>
+      <td>{{ r.student.name }}</td>
+      <td>{{ r.topic }}</td>
+      <td>{{ r.proposed_dt.strftime('%Y-%m-%d %H:%M') }} ({{ r.duration_minutes }} min)</td>
+      <td>
+        <form class="inline" method="post" action="{{ url_for('doubts.approve_request', request_id=r.id) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn small">Approve</button>
+        </form>
+        <form class="inline" method="post" action="{{ url_for('doubts.reject_request', request_id=r.id) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn small secondary">Reject</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4">No pending requests.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+
+<div class="card">
+  <h3>Resolved Requests</h3>
+  <table>
+    <tr><th>Student</th><th>Topic</th><th>Proposed Time</th><th>Status</th></tr>
+    {% for r in resolved %}
+    <tr>
+      <td>{{ r.student.name }}</td>
+      <td>{{ r.topic }}</td>
+      <td>{{ r.proposed_dt.strftime('%Y-%m-%d %H:%M') }} ({{ r.duration_minutes }} min)</td>
+      <td>
+        {% if r.status == 'approved' %}<span class="badge badge-paid">Approved</span>
+        {% else %}<span class="badge badge-pending">Rejected</span>{% endif %}
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4">No resolved requests yet.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

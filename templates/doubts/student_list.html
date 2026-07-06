@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Doubt Sessions{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>My Doubt Session Requests</h2>
+  <a href="{{ url_for('doubts.new_request') }}" class="btn">+ Request Doubt Session</a>
+</div>
+
+<div class="card">
+  <table>
+    <tr><th>Teacher</th><th>Topic</th><th>Proposed Time</th><th>Status</th></tr>
+    {% for r in requests %}
+    <tr>
+      <td>{{ r.teacher.name }}</td>
+      <td>{{ r.topic }}</td>
+      <td>{{ r.proposed_dt.strftime('%Y-%m-%d %H:%M') }} ({{ r.duration_minutes }} min)</td>
+      <td>
+        {% if r.status == 'approved' %}<span class="badge badge-paid">Approved</span>
+        {% elif r.status == 'rejected' %}<span class="badge badge-pending">Rejected</span>
+        {% else %}<span class="badge badge-pending">Awaiting Response</span>{% endif %}
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4">You haven't requested any doubt sessions yet.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

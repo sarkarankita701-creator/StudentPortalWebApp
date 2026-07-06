@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Add Material{% endblock %}
+{% block content %}
+<h2>Add Material</h2>
+<div class="card">
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" name="title" required>
+    </div>
+    <div class="form-group">
+      <label>Category</label>
+      <select name="category" required>
+        {% for key, label in categories.items() %}
+        <option value="{{ key }}">{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Google Drive Link (view access)</label>
+      <input type="url" name="gdrive_url" placeholder="https://drive.google.com/..." required>
+    </div>
+    <div class="form-group">
+      <label>Description (optional)</label>
+      <textarea name="description" rows="3"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Share with Students</label>
+      <div class="checkbox-list">
+        {% for s in students %}
+        <label><input type="checkbox" name="student_ids" value="{{ s.id }}"> {{ s.name }} ({{ s.username }})</label>
+        {% else %}
+        <span>No active students yet.</span>
+        {% endfor %}
+      </div>
+    </div>
+    <button type="submit" class="btn">Add Material</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Schedule Session{% endblock %}
+{% block content %}
+<h2>Schedule a Session</h2>
+<div class="card">
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" name="title" required>
+    </div>
+    <div class="form-group">
+      <label>Subject</label>
+      <input type="text" name="subject">
+    </div>
+    <div class="form-group">
+      <label>Class Link (Google Meet URL)</label>
+      <input type="url" name="meet_url" value="{{ current_user.default_meet_url or '' }}" placeholder="https://meet.google.com/xxx-xxxx-xxx">
+    </div>
+    <div class="form-group">
+      <label>Start</label>
+      <input type="datetime-local" name="start_dt" required>
+    </div>
+    <div class="form-group">
+      <label>Duration</label>
+      <select name="duration_minutes" required>
+        <option value="30">30 minutes</option>
+        <option value="45">45 minutes</option>
+        <option value="60" selected>1 hour</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Assign to Students</label>
+      <div class="checkbox-list">
+        {% for s in students %}
+        <label><input type="checkbox" name="student_ids" value="{{ s.id }}"> {{ s.name }} ({{ s.username }})</label>
+        {% else %}
+        <span>No active students yet.</span>
+        {% endfor %}
+      </div>
+    </div>
+    <button type="submit" class="btn">Schedule Session</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Payments{% endblock %}
+{% block content %}
+<h2>Payment Portal</h2>
+
+<div class="card">
+  <form method="get">
+    <div class="form-group">
+      <label>Select Student</label>
+      <select name="student_id" onchange="this.form.submit()">
+        <option value="">-- choose a student --</option>
+        {% for s in students %}
+        <option value="{{ s.id }}" {% if selected_student and s.id == selected_student.id %}selected{% endif %}>{{ s.name }} ({{ s.username }})</option>
+        {% endfor %}
+      </select>
+    </div>
+  </form>
+</div>
+
+{% if selected_student %}
+<div class="card">
+  <h3>Add Session Record for {{ selected_student.name }}</h3>
+  <form method="post" action="{{ url_for('payments.new_record') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="student_id" value="{{ selected_student.id }}">
+    <div class="form-group">
+      <label>Session Label</label>
+      <input type="text" name="session_label" placeholder="e.g. Math - Session 12" required>
+    </div>
+    <div class="form-group">
+      <label>Invoice Date</label>
+      <input type="date" name="invoice_date" required>
+    </div>
+    <div class="form-group">
+      <label>Price per Session</label>
+      <input type="number" step="0.01" name="price_per_session" value="{{ default_price }}" required>
+    </div>
+    <div class="form-group">
+      <label>Discount</label>
+      <input type="number" step="0.01" name="discount" value="0">
+    </div>
+    <div class="form-group">
+      <label>Status</label>
+      <select name="status">
+        <option value="pending">Pending</option>
+        <option value="paid">Paid</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Notes (optional)</label>
+      <input type="text" name="notes">
+    </div>
+    <button type="submit" class="btn">Add Record</button>
+  </form>
+</div>
+
+<div class="card">
+  <h3>Session History</h3>
+  <table>
+    <tr><th>Session</th><th>Invoice Date</th><th>Price</th><th>Discount</th><th>Amount</th><th>Status</th><th></th></tr>
+    {% for r in records %}
+    <tr>
+      <td>{{ r.session_label }}</td>
+      <td>{{ r.invoice_date.strftime('%Y-%m-%d') }}</td>
+      <td>Rs. {{ '%.2f'|format(r.price_per_session) }}</td>
+      <td>Rs. {{ '%.2f'|format(r.discount) }}</td>
+      <td>Rs. {{ '%.2f'|format(r.amount) }}</td>
+      <td>
+        {% if r.status == 'paid' %}<span class="badge badge-paid">Paid</span>
+        {% elif r.status == 'awaiting_verification' %}<span class="badge badge-pending">Awaiting Verification</span>
+        {% else %}<span class="badge badge-pending">Pending</span>{% endif %}
+      </td>
+      <td>
+        {% if r.status == 'awaiting_verification' %}
+        <form class="inline" method="post" action="{{ url_for('payments.confirm_payment', record_id=r.id) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn small">Confirm Paid</button>
+        </form>
+        <form class="inline" method="post" action="{{ url_for('payments.reset_payment', record_id=r.id) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn small secondary">Reject</button>
+        </form>
+        {% elif r.status == 'paid' %}
+        <form class="inline" method="post" action="{{ url_for('payments.reset_payment', record_id=r.id) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn small secondary">Mark Pending</button>
+        </form>
+        {% else %}
+        <form class="inline" method="post" action="{{ url_for('payments.confirm_payment', record_id=r.id) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn small secondary">Mark Paid</button>
+        </form>
+        {% endif %}
+        <form class="inline" method="post" action="{{ url_for('payments.delete_record', record_id=r.id) }}" onsubmit="return confirm('Delete this record?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn small danger">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="7">No sessions recorded yet.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endif %}
+{% endblock %}

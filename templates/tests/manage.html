@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Manage Test{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>{{ test.title }}</h2>
+  <form method="post" action="{{ url_for('tests.publish_test', test_id=test.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button type="submit" class="btn {{ 'secondary' if test.is_published else '' }}">
+      {{ 'Unpublish' if test.is_published else 'Publish' }}
+    </button>
+  </form>
+</div>
+<p>Duration: {{ test.duration_minutes }} minutes &middot; Total marks: {{ test.total_marks }} &middot;
+  Status: {% if test.is_published %}<span class="badge badge-published">Published</span>{% else %}<span class="badge badge-draft">Draft</span>{% endif %}
+</p>
+
+<div class="card">
+  <h3>Rules / Instructions</h3>
+  <p>Shown to students on a confirmation page before they start the timer.</p>
+  <form method="post" action="{{ url_for('tests.update_rules', test_id=test.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+      <textarea name="rules" rows="4" placeholder="e.g. No switching tabs, submit before the timer ends, calculators are not allowed...">{{ test.rules or '' }}</textarea>
+    </div>
+    <button type="submit" class="btn secondary">Save Rules</button>
+  </form>
+</div>
+
+<div class="card">
+  <h3>Questions</h3>
+  <table>
+    <tr><th>#</th><th>Question</th><th>Correct</th><th>Marks</th><th></th></tr>
+    {% for q in test.questions %}
+    <tr>
+      <td>{{ loop.index }}</td>
+      <td>{{ q.question_text }}</td>
+      <td>{{ q.correct_option|upper }}</td>
+      <td>{{ q.marks }}</td>
+      <td>
+        <form class="inline" method="post" action="{{ url_for('tests.delete_question', test_id=test.id, question_id=q.id) }}" onsubmit="return confirm('Delete this question?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn small danger">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5">No questions yet.</td></tr>
+    {% endfor %}
+  </table>
+
+  <h4>Add Question</h4>
+  <form method="post" action="{{ url_for('tests.add_question', test_id=test.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+      <label>Question Text</label>
+      <textarea name="question_text" rows="2" required></textarea>
+    </div>
+    <div class="form-group"><label>Option A</label><input type="text" name="option_a" required></div>
+    <div class="form-group"><label>Option B</label><input type="text" name="option_b" required></div>
+    <div class="form-group"><label>Option C</label><input type="text" name="option_c" required></div>
+    <div class="form-group"><label>Option D</label><input type="text" name="option_d" required></div>
+    <div class="form-group">
+      <label>Correct Option</label>
+      <select name="correct_option" required>
+        <option value="a">A</option>
+        <option value="b">B</option>
+        <option value="c">C</option>
+        <option value="d">D</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Marks</label>
+      <input type="number" name="marks" value="1" min="1">
+    </div>
+    <button type="submit" class="btn">Add Question</button>
+  </form>
+</div>
+
+<div class="card">
+  <h3>Assign Students</h3>
+  <form method="post" action="{{ url_for('tests.assign_test', test_id=test.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="checkbox-list">
+      {% for s in students %}
+      <label><input type="checkbox" name="student_ids" value="{{ s.id }}" {% if s.id in assigned_ids %}checked{% endif %}> {{ s.name }} ({{ s.username }})</label>
+      {% else %}
+      <span>No active students yet.</span>
+      {% endfor %}
+    </div>
+    <br>
+    <button type="submit" class="btn">Update Assignments</button>
+  </form>
+</div>
+{% endblock %}

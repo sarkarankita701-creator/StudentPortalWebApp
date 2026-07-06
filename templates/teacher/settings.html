@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}My Settings{% endblock %}
+{% block content %}
+<h2>My Settings</h2>
+<div class="card">
+  <h3>Default Class Link</h3>
+  <p>Pre-fills the meeting link whenever you schedule a new session &mdash; you can still override it per session.</p>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+      <label>Default Google Meet URL</label>
+      <input type="url" name="default_meet_url" value="{{ current_user.default_meet_url or '' }}" placeholder="https://meet.google.com/xxx-xxxx-xxx">
+    </div>
+    <button type="submit" class="btn">Save Settings</button>
+  </form>
+</div>
+{% endblock %}

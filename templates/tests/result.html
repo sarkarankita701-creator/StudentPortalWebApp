@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Test Result{% endblock %}
+{% block content %}
+<h2>{{ test.title }} &mdash; Result</h2>
+<div class="card">
+  <p><strong>Score:</strong> {{ attempt.score }} / {{ test.total_marks }}
+  {% set pct = (attempt.score / test.total_marks * 100) if test.total_marks else 0 %}
+  ({{ '%.1f'|format(pct) }}%)</p>
+  <p><strong>Submitted:</strong> {{ attempt.submitted_at.strftime('%Y-%m-%d %H:%M') if attempt.submitted_at else '-' }}</p>
+</div>
+
+<div class="card">
+  <h3>Answer Review</h3>
+  <table>
+    <tr><th>#</th><th>Question</th><th>Your Answer</th><th>Correct Answer</th><th>Result</th></tr>
+    {% for ans in attempt.answers %}
+    <tr>
+      <td>{{ loop.index }}</td>
+      <td>{{ ans.question.question_text }}</td>
+      <td>{{ ans.selected_option|upper if ans.selected_option else 'No answer' }}</td>
+      <td>{{ ans.question.correct_option|upper }}</td>
+      <td>
+        {% if ans.is_correct %}<span class="badge badge-paid">Correct</span>
+        {% else %}<span class="badge badge-pending">Incorrect</span>{% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

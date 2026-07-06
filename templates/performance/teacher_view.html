@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Performance Tracker{% endblock %}
+{% block content %}
+<h2>Performance Tracker</h2>
+
+<div class="card">
+  <form method="get">
+    <div class="form-group">
+      <label>Select Student</label>
+      <select name="student_id" onchange="this.form.submit()">
+        <option value="">-- choose a student --</option>
+        {% for s in students %}
+        <option value="{{ s.id }}" {% if selected_student and s.id == selected_student.id %}selected{% endif %}>{{ s.name }} ({{ s.username }})</option>
+        {% endfor %}
+      </select>
+    </div>
+  </form>
+</div>
+
+{% if selected_student %}
+<div class="card-grid">
+  <div class="stat"><div class="num">{{ rows|length }}</div><div class="label">Tests Completed</div></div>
+  <div class="stat"><div class="num">{{ avg_pct }}%</div><div class="label">Average Score</div></div>
+</div>
+
+<div class="card">
+  <h3>{{ selected_student.name }}'s Results</h3>
+  <table>
+    <tr><th>Test</th><th>Date</th><th>Score</th><th>%</th><th></th></tr>
+    {% for r in rows %}
+    <tr>
+      <td>{{ r.test.title }}</td>
+      <td>{{ r.attempt.submitted_at.strftime('%Y-%m-%d') if r.attempt.submitted_at else '-' }}</td>
+      <td>{{ r.attempt.score }} / {{ r.test.total_marks }}</td>
+      <td style="min-width:160px;">
+        <div class="bar-track"><div class="bar-fill" style="width:{{ r.pct }}%;"></div></div>
+        {{ r.pct }}%
+      </td>
+      <td><a href="{{ url_for('tests.result', test_id=r.test.id, student_id=selected_student.id) }}" class="btn small secondary">Review</a></td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5">No completed tests yet.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endif %}
+{% endblock %}

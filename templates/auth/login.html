@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Log In{% endblock %}
+{% block content %}
+<div class="login-wrap">
+  <div class="login-brand">
+    <h1>Ankita's Classes</h1>
+    <p class="tagline">Confidence is the Curriculum</p>
+  </div>
+  <div class="card">
+    <h2>Log In</h2>
+    <form method="post">
+      {{ form.hidden_tag() }}
+      <div class="form-group">
+        {{ form.username.label }}
+        {{ form.username(autofocus=true) }}
+      </div>
+      <div class="form-group">
+        {{ form.password.label }}
+        <div class="password-wrap">
+          {{ form.password(id="password-field") }}
+          <button type="button" class="btn small secondary toggle-password" data-target="password-field">Show</button>
+        </div>
+      </div>
+      {{ form.submit(class="btn") }}
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Payments{% endblock %}
+{% block content %}
+<h2>My Payments</h2>
+
+<div class="card-grid">
+  <div class="stat"><div class="num">{{ summary.total_sessions }}</div><div class="label">Sessions Engaged</div></div>
+  <div class="stat"><div class="num">Rs. {{ '%.2f'|format(summary.total_paid) }}</div><div class="label">Total Paid</div></div>
+  <div class="stat"><div class="num">Rs. {{ '%.2f'|format(summary.total_due) }}</div><div class="label">Total Due</div></div>
+</div>
+
+<div class="card">
+  <h3>Pay via QR Code</h3>
+  <img src="{{ url_for('static', filename='qr_code.png') }}" class="qr-image" alt="Payment QR code">
+</div>
+
+<div class="card">
+  <h3>Session History</h3>
+  <table>
+    <tr><th>Session</th><th>Invoice Date</th><th>Price</th><th>Discount</th><th>Amount</th><th>Status</th><th></th></tr>
+    {% for r in records %}
+    <tr>
+      <td>{{ r.session_label }}</td>
+      <td>{{ r.invoice_date.strftime('%Y-%m-%d') }}</td>
+      <td>Rs. {{ '%.2f'|format(r.price_per_session) }}</td>
+      <td>Rs. {{ '%.2f'|format(r.discount) }}</td>
+      <td>Rs. {{ '%.2f'|format(r.amount) }}</td>
+      <td>
+        {% if r.status == 'paid' %}<span class="badge badge-paid">Paid</span>
+        {% elif r.status == 'awaiting_verification' %}<span class="badge badge-pending">Awaiting Verification</span>
+        {% else %}<span class="badge badge-pending">Pending</span>{% endif %}
+      </td>
+      <td>
+        {% if r.status == 'pending' %}
+        <form class="inline" method="post" action="{{ url_for('payments.claim_payment', record_id=r.id) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn small">Payment Done</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="7">No sessions recorded yet.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

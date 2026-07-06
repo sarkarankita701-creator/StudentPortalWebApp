@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Create Test{% endblock %}
+{% block content %}
+<h2>Create Test</h2>
+<div class="card">
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+      <label>Test Title</label>
+      <input type="text" name="title" required>
+    </div>
+    <div class="form-group">
+      <label>Duration (minutes)</label>
+      <input type="number" name="duration_minutes" min="1" required>
+    </div>
+    <div class="form-group">
+      <label>Rules / Instructions (shown to students before they start)</label>
+      <textarea name="rules" rows="4" placeholder="e.g. No switching tabs, submit before the timer ends, calculators are not allowed..."></textarea>
+    </div>
+    <button type="submit" class="btn">Create &amp; Add Questions</button>
+  </form>
+</div>
+{% endblock %}
