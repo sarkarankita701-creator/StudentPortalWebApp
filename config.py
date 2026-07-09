@@ -10,7 +10,7 @@ class Config:
 
     # Seeded on first run if no Super Admin exists yet.
     DEFAULT_SUPER_ADMIN_USERNAME = os.environ.get("SUPER_ADMIN_USERNAME", "admin")
-    DEFAULT_SUPER_ADMIN_PASSWORD = os.environ.get("SUPER_ADMIN_PASSWORD", "admin123")
+    DEFAULT_SUPER_ADMIN_PASSWORD = os.environ.get("SUPER_ADMIN_PASSWORD", "admin123ankita987898098")
     DEFAULT_SUPER_ADMIN_NAME = "Super Admin"
     DEFAULT_SUPER_ADMIN_EMAIL = "admin@example.com"
 
