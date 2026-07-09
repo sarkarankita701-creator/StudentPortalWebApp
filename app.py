@@ -3,6 +3,7 @@ import os
 from flask import Flask
 from flask_migrate import upgrade
 from flask_wtf import CSRFProtect
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 from config import Config
 from extensions import db, login_manager, migrate
@@ -13,6 +14,11 @@ from utils.seed import seed_super_admin
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+
+    # Trust the X-Forwarded-* headers ngrok sets so Flask knows the original
+    # request was HTTPS (needed for secure cookies and CSRF checks) even
+    # though it only ever receives plain HTTP from the local tunnel.
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 
     os.makedirs(os.path.join(app.root_path, "instance"), exist_ok=True)
 
@@ -74,4 +80,4 @@ app = create_app()
 
 if __name__ == "__main__":
     init_db(app)
-    app.run(debug=True, port=5000)
+    app.run(debug=False, port=5000)

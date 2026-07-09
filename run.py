@@ -9,6 +9,8 @@ import signal
 import subprocess
 import sys
 
+from waitress import serve
+
 from app import app, init_db
 
 PORT = 5000
@@ -63,8 +65,9 @@ if __name__ == "__main__":
     start_ngrok()
     init_db(app)
     try:
-        # debug/reloader off: the reloader re-executes this script in a
-        # second process, which would start a duplicate ngrok tunnel.
-        app.run(port=PORT, debug=False)
+        # waitress instead of app.run(): Flask's built-in server is
+        # explicitly not meant for serving requests from the internet,
+        # which is what this becomes once ngrok exposes it publicly.
+        serve(app, host="127.0.0.1", port=PORT, threads=8)
     finally:
         stop_ngrok()

@@ -2,7 +2,7 @@
 
 Single-process Flask app (server-rendered HTML, SQLite) for running an online tuition business with three roles: Super Admin, Teacher, Student.
 
-## Run it
+## Run it (local dev)
 
 ```
 python -m venv venv
@@ -10,7 +10,32 @@ venv\Scripts\pip install -r requirements.txt
 venv\Scripts\python app.py
 ```
 
-Open http://127.0.0.1:5000 — the first run seeds a Super Admin account and prints its username/password to the console (default `admin` / `admin123`, override with the `SUPER_ADMIN_USERNAME` / `SUPER_ADMIN_PASSWORD` env vars). Log in as that admin and change the password by creating a new admin-managed flow, or simply update it directly for now.
+Open http://127.0.0.1:5000 — the first run seeds a Super Admin account and prints its username/password to the console (default `admin` / `admin123ankita987898098`, override with the `SUPER_ADMIN_USERNAME` / `SUPER_ADMIN_PASSWORD` env vars, or via `.env` — see below). Log in as that admin and change the password by creating a new admin-managed flow, or simply update it directly for now.
+
+## Deploying (this machine + ngrok)
+
+`run.py` runs the app behind a production WSGI server ([waitress](https://docs.pylonsproject.org/projects/waitress/)) and opens a public [ngrok](https://ngrok.com/) tunnel on the reserved domain `goatskin-zodiac-entryway.ngrok-free.dev`, so the site is reachable from the internet while it runs on this machine.
+
+One-time setup:
+
+1. Install ngrok and authenticate it once: `ngrok config add-authtoken <your-authtoken>` (from your ngrok dashboard).
+2. Copy `.env.example` to `.env` and fill in real values:
+   ```
+   copy .env.example .env
+   ```
+   - `SECRET_KEY`: a long random string (e.g. `python -c "import secrets; print(secrets.token_hex(32))"`). Signs sessions/CSRF tokens — keep it secret and stable across restarts, or every restart logs everyone out.
+   - `SUPER_ADMIN_USERNAME` / `SUPER_ADMIN_PASSWORD`: only used the *first* time the app runs against an empty database (see "Data persistence" below) — changing them later has no effect on an already-seeded admin account.
+
+   `.env` is gitignored and loaded automatically via `python-dotenv`; never commit it.
+
+To run:
+
+```
+venv\Scripts\pip install -r requirements.txt
+venv\Scripts\python run.py
+```
+
+Keep that terminal/process running for the site to stay reachable — closing it stops both the app and the tunnel. Since traffic arrives over ngrok's HTTPS tunnel, the app trusts ngrok's forwarded headers (`ProxyFix` in `app.py`) so session cookies are correctly marked `Secure`/`HttpOnly` and CSRF checks pass.
 
 ## Roles
 
@@ -31,7 +56,7 @@ All data lives in `instance/app.db` (SQLite), next to the code, and is **not** t
 ```
 git pull
 venv\Scripts\pip install -r requirements.txt   # only needed if requirements.txt changed
-venv\Scripts\python app.py
+venv\Scripts\python run.py
 ```
 
 That's it — restarting the process never touches `instance/app.db`, so all existing users, calendar events, materials, tests, attempts, and payment records survive every restart and every redeploy, as long as:
@@ -47,4 +72,4 @@ On startup the app runs any pending [Flask-Migrate](https://flask-migrate.readth
 venv\Scripts\flask db migrate -m "describe the change"
 ```
 
-Review the generated file under `migrations/versions/`, commit it along with your model change, then deploy as usual — the next `python app.py` run applies it automatically.
+Review the generated file under `migrations/versions/`, commit it along with your model change, then deploy as usual — the next `python run.py` run applies it automatically.
