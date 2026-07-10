@@ -16,6 +16,7 @@ from models import (
     User,
 )
 from utils.decorators import role_required
+from utils.test_content import validate_questions_json
 
 tests_bp = Blueprint("tests", __name__, url_prefix="/tests")
 
@@ -81,24 +82,36 @@ def _get_owned_test(test_id):
     return test
 
 
+def _manage_context(test):
+    students = User.query.filter_by(role=ROLE_STUDENT, is_active_flag=True).order_by(User.name).all()
+    assigned_ids = {a.student_id for a in test.assignments}
+    return {"test": test, "students": students, "assigned_ids": assigned_ids}
+
+
 @tests_bp.route("/<int:test_id>")
 @login_required
 @role_required(ROLE_TEACHER, ROLE_SUPER_ADMIN)
 def manage_test(test_id):
     test = _get_owned_test(test_id)
-    students = User.query.filter_by(role=ROLE_STUDENT, is_active_flag=True).order_by(User.name).all()
-    assigned_ids = {a.student_id for a in test.assignments}
-    return render_template("tests/manage.html", test=test, students=students, assigned_ids=assigned_ids)
+    return render_template("tests/manage.html", **_manage_context(test))
 
 
-@tests_bp.route("/<int:test_id>/rules", methods=["POST"])
+@tests_bp.route("/<int:test_id>/settings", methods=["POST"])
 @login_required
 @role_required(ROLE_TEACHER, ROLE_SUPER_ADMIN)
-def update_rules(test_id):
+def update_settings(test_id):
     test = _get_owned_test(test_id)
-    test.rules = request.form.get("rules", "").strip()
+    duration = request.form.get("duration_minutes", type=int)
+    rules = request.form.get("rules", "").strip()
+
+    if not duration or duration <= 0:
+        flash("Duration must be a positive number of minutes.", "error")
+        return redirect(url_for("tests.manage_test", test_id=test.id))
+
+    test.duration_minutes = duration
+    test.rules = rules
     db.session.commit()
-    flash("Test rules updated.", "success")
+    flash("Test settings updated.", "success")
     return redirect(url_for("tests.manage_test", test_id=test.id))
 
 
@@ -133,6 +146,30 @@ def add_question(test_id):
     db.session.add(question)
     db.session.commit()
     flash("Question added.", "success")
+    return redirect(url_for("tests.manage_test", test_id=test.id))
+
+
+@tests_bp.route("/<int:test_id>/questions/bulk", methods=["POST"])
+@login_required
+@role_required(ROLE_TEACHER, ROLE_SUPER_ADMIN)
+def bulk_add_questions(test_id):
+    test = _get_owned_test(test_id)
+    raw_json = request.form.get("questions_json", "").strip()
+
+    if not raw_json:
+        flash("Paste a JSON array of questions first.", "error")
+        return render_template("tests/manage.html", **_manage_context(test), bulk_questions_json=raw_json)
+
+    try:
+        questions = validate_questions_json(raw_json)
+    except ValueError as exc:
+        flash(str(exc), "error")
+        return render_template("tests/manage.html", **_manage_context(test), bulk_questions_json=raw_json)
+
+    for q in questions:
+        db.session.add(Question(test_id=test.id, **q))
+    db.session.commit()
+    flash(f"Added {len(questions)} question(s).", "success")
     return redirect(url_for("tests.manage_test", test_id=test.id))
 
 

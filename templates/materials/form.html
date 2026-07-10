@@ -1,46 +1,80 @@
 {% extends "base.html" %}
-{% block title %}Add Material{% endblock %}
+{% block title %}{{ 'Edit Material' if material else 'Add Material' }}{% endblock %}
 {% block content %}
+{% set title_val = form_data.title if form_data else (material.title if material else '') %}
+{% set category_val = form_data.category if form_data else (material.category if material else '') %}
+{% set content_type_val = form_data.content_type if form_data else (material.content_type if material else 'link') %}
+{% set gdrive_val = form_data.gdrive_url if form_data else ((material.gdrive_url or '') if material else '') %}
+{% set content_input_val = form_data.content_input if form_data else (((material.content_json or material.content_html) or '') if material else '') %}
+{% set description_val = form_data.description if form_data else ((material.description or '') if material else '') %}
+{% set selected_student_ids = (form_data.getlist('student_ids')|map('int')|list) if form_data else ((material.students|map(attribute='id')|list) if material else []) %}
+
 <div class="page-header">
   <div>
-    <h2>📚 Add Material</h2>
-    <p class="page-sub">Share a Google Drive resource with selected students. Make sure the link has view access.</p>
+    <h2>📚 {{ 'Edit Material' if material else 'Add Material' }}</h2>
+    <p class="page-sub">Share a Google Drive resource, or paste structured JSON/HTML content that renders right inside the app.</p>
   </div>
 </div>
 <div class="card">
-  <form method="post">
+  <form method="post" id="material-form">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="form-group">
       <label>Title</label>
-      <input type="text" name="title" required>
+      <input type="text" name="title" value="{{ title_val }}" required>
     </div>
     <div class="form-group">
       <label>Category</label>
       <select name="category" required>
         {% for key, label in categories.items() %}
-        <option value="{{ key }}">{{ label }}</option>
+        <option value="{{ key }}" {% if key == category_val %}selected{% endif %}>{{ label }}</option>
         {% endfor %}
       </select>
     </div>
+
     <div class="form-group">
-      <label>Google Drive Link (view access)</label>
-      <input type="url" name="gdrive_url" placeholder="https://drive.google.com/..." required>
+      <label>Content Source</label>
+      <div class="segmented" id="content-type-toggle">
+        {% for key, label in content_types.items() %}
+        <label class="segmented-option">
+          <input type="radio" name="content_type" value="{{ key }}" {% if key == content_type_val %}checked{% endif %}>
+          <span>{{ label }}</span>
+        </label>
+        {% endfor %}
+      </div>
     </div>
+
+    <div class="form-group" id="field-link">
+      <label>Google Drive Link (view access)</label>
+      <input type="url" name="gdrive_url" value="{{ gdrive_val }}" placeholder="https://drive.google.com/...">
+    </div>
+
+    <div class="form-group" id="field-structured">
+      <label>Paste JSON or HTML content</label>
+      <p class="page-sub" id="structured-hint"></p>
+      <textarea name="content_input" id="content_input" rows="14" spellcheck="false">{{ content_input_val }}</textarea>
+      <div class="validate-row">
+        <button type="button" class="btn secondary small" id="validate-btn">Validate</button>
+        <button type="button" class="btn secondary small" id="copy-prompt-btn">Copy AI Prompt</button>
+        <span id="validate-result"></span>
+      </div>
+    </div>
+
     <div class="form-group">
       <label>Description (optional)</label>
-      <textarea name="description" rows="3"></textarea>
+      <textarea name="description" rows="3">{{ description_val }}</textarea>
     </div>
     <div class="form-group">
       <label>Share with Students</label>
       <div class="checkbox-list">
         {% for s in students %}
-        <label><input type="checkbox" name="student_ids" value="{{ s.id }}"> {{ s.name }} ({{ s.username }})</label>
+        <label><input type="checkbox" name="student_ids" value="{{ s.id }}" {% if s.id in selected_student_ids %}checked{% endif %}> {{ s.name }} ({{ s.username }})</label>
         {% else %}
         <span>No active students yet.</span>
         {% endfor %}
       </div>
     </div>
-    <button type="submit" class="btn">Add Material</button>
+    <button type="submit" class="btn">{{ 'Save Changes' if material else 'Add Material' }}</button>
   </form>
 </div>
+<script src="{{ url_for('static', filename='js/material_content_form.js') }}"></script>
 {% endblock %}

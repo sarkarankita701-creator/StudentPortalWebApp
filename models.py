@@ -79,9 +79,13 @@ class Material(db.Model):
     title = db.Column(db.String(200), nullable=False)
     category = db.Column(db.String(30), nullable=False)  # notes / worksheet / qa_previous_years
     teacher_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    gdrive_url = db.Column(db.String(500), nullable=False)
+    content_type = db.Column(db.String(10), nullable=False, default="link")  # link / json / html
+    gdrive_url = db.Column(db.String(500))
+    content_json = db.Column(db.Text)
+    content_html = db.Column(db.Text)
     description = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     teacher = db.relationship("User", foreign_keys=[teacher_id])
     students = db.relationship("User", secondary=material_assignments, backref="assigned_materials")

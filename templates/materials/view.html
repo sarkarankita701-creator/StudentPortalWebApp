@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}{{ material.title }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h2>📖 {{ material.title }}</h2>
+    <p class="page-sub">{{ material.description or '' }}</p>
+  </div>
+  <a href="{{ url_for('materials.list_materials') }}" class="btn secondary">&larr; Back to Material Bank</a>
+</div>
+
+<div class="card note-content">
+  {% if material.content_type == 'html' %}
+    {{ material.content_html|safe }}
+  {% elif blocks %}
+    {% for block in blocks %}
+      {% set btype = block['type'] %}
+      {% if btype == 'heading' %}
+        {% set level = block.get('level', 2) %}
+        <h{{ level }} class="note-heading">{{ block['text'] }}</h{{ level }}>
+      {% elif btype == 'paragraph' %}
+        <p class="note-paragraph">{{ block['text'] }}</p>
+      {% elif btype == 'list' %}
+        {% if block.get('style') == 'number' %}
+        <ol class="note-list">{% for item in block['items'] %}<li>{{ item }}</li>{% endfor %}</ol>
+        {% else %}
+        <ul class="note-list">{% for item in block['items'] %}<li>{{ item }}</li>{% endfor %}</ul>
+        {% endif %}
+      {% elif btype == 'table' %}
+        <table class="note-table">
+          <tr>{% for h in block['headers'] %}<th>{{ h }}</th>{% endfor %}</tr>
+          {% for row in block['rows'] %}
+          <tr>{% for cell in row %}<td>{{ cell }}</td>{% endfor %}</tr>
+          {% endfor %}
+        </table>
+      {% elif btype == 'qa' %}
+        <div class="note-qa">
+          <p class="note-qa-question">Q. {{ block['question'] }}</p>
+          <p class="note-qa-answer">A. {{ block['answer'] }}</p>
+        </div>
+      {% elif btype == 'code' %}
+        <pre class="note-code"><code>{{ block['text'] }}</code></pre>
+      {% elif btype == 'image' %}
+        {% set caption = block.get('caption') %}
+        <figure class="note-image">
+          <img src="{{ block['url'] }}" alt="{{ caption or '' }}" loading="lazy">
+          {% if caption %}<figcaption>{{ caption }}</figcaption>{% endif %}
+        </figure>
+      {% endif %}
+    {% endfor %}
+  {% else %}
+    <p class="page-sub">No content to display.</p>
+  {% endif %}
+</div>
+{% endblock %}

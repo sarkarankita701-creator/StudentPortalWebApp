@@ -17,14 +17,22 @@
   {% set items = grouped.get(key, []) %}
   {% if items %}
   <table>
-    <tr><th>Title</th><th>Description</th><th>Added</th><th></th></tr>
+    <tr><th>Title</th><th>Description</th>{% if current_user.is_teacher() or current_user.is_super_admin() %}<th>Added By</th>{% endif %}<th>Added</th><th></th></tr>
     {% for m in items %}
     <tr>
-      <td><a href="{{ m.gdrive_url }}" target="_blank" rel="noopener">{{ m.title }}</a></td>
+      <td>
+        {% if m.content_type == 'link' %}
+        <a href="{{ m.gdrive_url }}" target="_blank" rel="noopener">{{ m.title }}</a>
+        {% else %}
+        <a href="{{ url_for('materials.view_material', material_id=m.id) }}">{{ m.title }}</a>
+        {% endif %}
+      </td>
       <td>{{ m.description or '-' }}</td>
+      {% if current_user.is_teacher() or current_user.is_super_admin() %}<td>{{ m.teacher.name }}</td>{% endif %}
       <td>{{ m.created_at.strftime('%Y-%m-%d') }}</td>
       <td>
-        {% if current_user.is_super_admin() or (current_user.is_teacher() and m.teacher_id == current_user.id) %}
+        {% if current_user.is_super_admin() or current_user.is_teacher() %}
+        <a href="{{ url_for('materials.edit_material', material_id=m.id) }}" class="btn small secondary">Edit</a>
         <form class="inline" method="post" action="{{ url_for('materials.delete_material', material_id=m.id) }}" onsubmit="return confirm('Delete this material?');">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <button type="submit" class="btn small danger">Delete</button>

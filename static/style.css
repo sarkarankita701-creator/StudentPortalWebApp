@@ -807,6 +807,53 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--brand-600); }
 .auth-body .footer-links a:hover { color: #fff; }
 
 /* ------------------------------------------------------------
+   Material content: source toggle, validation, in-app note view
+   ------------------------------------------------------------ */
+.segmented {
+  display: inline-flex;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.segmented-option {
+  margin: 0;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-500);
+  cursor: pointer;
+  border-right: 1.5px solid var(--line);
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.segmented-option:last-child { border-right: none; }
+.segmented-option input { position: absolute; opacity: 0; pointer-events: none; }
+.segmented-option:has(input:checked) { background: var(--brand-600); color: #fff; }
+.segmented-option:hover:not(:has(input:checked)) { background: var(--line-soft); }
+
+#content_input { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; font-size: 0.82rem; }
+
+.validate-row { display: flex; align-items: center; gap: 0.7rem; margin-top: 0.5rem; }
+.validate-ok { color: var(--green-fg); font-weight: 600; font-size: 0.85rem; }
+.validate-error { color: var(--red-fg); font-weight: 600; font-size: 0.85rem; }
+
+.note-content { line-height: 1.6; }
+.note-content .note-heading { margin-top: 1.2rem; }
+.note-content .note-heading:first-child { margin-top: 0; }
+.note-content .note-list { padding-left: 1.4rem; }
+.note-table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; }
+.note-table th, .note-table td { border: 1px solid var(--line); padding: 0.5rem 0.7rem; text-align: left; font-size: 0.88rem; }
+.note-table th { background: var(--line-soft); }
+.note-qa { background: var(--slate-bg); border-radius: var(--radius-sm); padding: 0.8rem 1rem; margin: 0.8rem 0; }
+.note-qa-question { font-weight: 700; margin: 0 0 0.35rem; }
+.note-qa-answer { margin: 0; color: var(--ink-700); }
+.note-code { background: var(--ink-900); color: #e2e8f0; padding: 0.9rem 1rem; border-radius: var(--radius-sm); overflow-x: auto; font-size: 0.85rem; }
+.note-image { margin: 0.9rem 0; }
+.note-image img { max-width: 100%; border-radius: var(--radius-sm); }
+.note-image figcaption { font-size: 0.8rem; color: var(--ink-500); margin-top: 0.3rem; }
+
+/* ------------------------------------------------------------
    Responsive
    ------------------------------------------------------------ */
 @media (max-width: 760px) {

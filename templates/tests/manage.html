@@ -16,14 +16,19 @@
   </form>
 </div>
 <div class="card">
-  <h3>Rules / Instructions</h3>
-  <p>Shown to students on a confirmation page before they start the timer.</p>
-  <form method="post" action="{{ url_for('tests.update_rules', test_id=test.id) }}">
+  <h3>Test Settings</h3>
+  <form method="post" action="{{ url_for('tests.update_settings', test_id=test.id) }}">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="form-group">
+      <label>Duration (minutes)</label>
+      <input type="number" name="duration_minutes" value="{{ test.duration_minutes }}" min="1" required>
+    </div>
+    <div class="form-group">
+      <label>Rules / Instructions</label>
+      <p class="page-sub">Shown to students on a confirmation page before they start the timer.</p>
       <textarea name="rules" rows="4" placeholder="e.g. No switching tabs, submit before the timer ends, calculators are not allowed...">{{ test.rules or '' }}</textarea>
     </div>
-    <button type="submit" class="btn secondary">Save Rules</button>
+    <button type="submit" class="btn secondary">Save Settings</button>
   </form>
 </div>
 
@@ -75,6 +80,21 @@
     </div>
     <button type="submit" class="btn">Add Question</button>
   </form>
+
+  <h4>Bulk Add Questions (JSON)</h4>
+  <p class="page-sub">Paste all your questions as one JSON object to add them in one go — handy for pasting AI-generated questions.</p>
+  <form method="post" action="{{ url_for('tests.bulk_add_questions', test_id=test.id) }}" id="bulk-questions-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+      <textarea name="questions_json" id="questions_json" rows="14" spellcheck="false">{{ bulk_questions_json or '' }}</textarea>
+      <div class="validate-row">
+        <button type="button" class="btn secondary small" id="validate-questions-btn">Validate</button>
+        <button type="button" class="btn secondary small" id="copy-questions-prompt-btn">Copy AI Prompt</button>
+        <span id="validate-questions-result"></span>
+      </div>
+    </div>
+    <button type="submit" class="btn">Add Questions from JSON</button>
+  </form>
 </div>
 
 <div class="card">
@@ -92,4 +112,5 @@
     <button type="submit" class="btn">Update Assignments</button>
   </form>
 </div>
+<script src="{{ url_for('static', filename='js/test_bulk_questions.js') }}"></script>
 {% endblock %}
