@@ -42,6 +42,7 @@ def create_app():
     from routes.calendar import calendar_bp
     from routes.materials import materials_bp
     from routes.tests import tests_bp
+    from routes.games import games_bp
     from routes.performance import performance_bp
     from routes.payments import payments_bp
     from routes.teacher import teacher_bp
@@ -52,6 +53,7 @@ def create_app():
     app.register_blueprint(calendar_bp)
     app.register_blueprint(materials_bp)
     app.register_blueprint(tests_bp)
+    app.register_blueprint(games_bp)
     app.register_blueprint(performance_bp)
     app.register_blueprint(payments_bp)
     app.register_blueprint(teacher_bp)

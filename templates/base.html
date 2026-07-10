@@ -27,6 +27,7 @@
       <a href="{{ url_for('calendar.list_events') }}" class="{{ 'active' if ep.startswith('calendar.') }}">Calendar</a>
       <a href="{{ url_for('materials.list_materials') }}" class="{{ 'active' if ep.startswith('materials.') }}">Material Bank</a>
       <a href="{{ url_for('tests.list_tests') }}" class="{{ 'active' if ep.startswith('tests.') }}">Test Portal</a>
+      <a href="{{ url_for('games.list_games') }}" class="{{ 'active' if ep.startswith('games.') }}">Game Zone</a>
       <a href="{{ url_for('performance.view') }}" class="{{ 'active' if ep.startswith('performance.') }}">Performance</a>
       <a href="{{ url_for('payments.view') }}" class="{{ 'active' if ep.startswith('payments.') }}">Payments</a>
       <a href="{{ url_for('doubts.view') }}" class="{{ 'active' if ep.startswith('doubts.') }}">Doubt Sessions</a>

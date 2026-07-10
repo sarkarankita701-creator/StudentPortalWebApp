@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Create Game Session{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h2>🎮 Create Game Session</h2>
+    <p class="page-sub">Set the basics here — you'll add items and assign students on the next screen.</p>
+  </div>
+</div>
+<div class="card">
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+      <label>Game Title</label>
+      <input type="text" name="title" required>
+    </div>
+    <div class="form-group">
+      <label>Topic</label>
+      <input type="text" name="topic" placeholder="e.g. Photosynthesis, Algebra Basics">
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea name="description" rows="3" placeholder="A short note for students about what this session covers."></textarea>
+    </div>
+    <button type="submit" class="btn">Create &amp; Add Items</button>
+  </form>
+</div>
+{% endblock %}

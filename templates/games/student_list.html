@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Game Zone{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h2>🎮 Game Zone</h2>
+    <p class="page-sub">Pick a game to revise a topic. Play as many times as you like — your best score is saved.</p>
+  </div>
+</div>
+
+{% if rows %}
+<div class="game-grid">
+  {% for row in rows %}
+  <div class="card game-tile">
+    <h3>{{ row.game.title }}</h3>
+    <p class="page-sub">{{ row.game.topic or 'General revision' }}</p>
+    {% if row.game.description %}<p>{{ row.game.description }}</p>{% endif %}
+    <p class="page-sub">{{ row.game.item_count }} item(s)</p>
+    {% if row.result %}
+    <span class="badge badge-published">Best: {{ row.result.best_score }}/{{ row.result.total_items }}</span>
+    {% else %}
+    <span class="badge badge-draft">Not played yet</span>
+    {% endif %}
+    <div style="margin-top: 0.9rem;">
+      <a href="{{ url_for('games.play_game', game_id=row.game.id) }}" class="btn small">{{ 'Play Again' if row.result else 'Play' }} ▶</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="card">
+  <div class="empty-state"><span class="icon">🎮</span><p><strong>No games assigned yet.</strong></p><p>Your teacher will assign revision games here when they're ready.</p></div>
+</div>
+{% endif %}
+{% endblock %}

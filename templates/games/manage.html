@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Manage Game Session{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h2>{{ game.title }}</h2>
+    <p class="page-sub">{{ game.topic or 'No topic set' }} &middot; {{ game.item_count }} item(s) &middot;
+      {% if game.is_published %}<span class="badge badge-published">Published</span>{% else %}<span class="badge badge-draft">Draft</span>{% endif %}
+    </p>
+  </div>
+  <form method="post" action="{{ url_for('games.publish_game', game_id=game.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button type="submit" class="btn {{ 'secondary' if game.is_published else '' }}">
+      {{ 'Unpublish' if game.is_published else 'Publish' }}
+    </button>
+  </form>
+</div>
+
+<div class="card">
+  <h3>Game Settings</h3>
+  <form method="post" action="{{ url_for('games.update_settings', game_id=game.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" name="title" value="{{ game.title }}" required>
+    </div>
+    <div class="form-group">
+      <label>Topic</label>
+      <input type="text" name="topic" value="{{ game.topic or '' }}">
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea name="description" rows="3">{{ game.description or '' }}</textarea>
+    </div>
+    <button type="submit" class="btn secondary">Save Settings</button>
+  </form>
+</div>
+
+<div class="card">
+  <h3>Items (JSON)</h3>
+  <p class="page-sub">Paste all your revision items as one JSON object — a mix of flashcards, MCQs, true/false, and fill-in-the-blank. Saving replaces the whole item set.</p>
+  <form method="post" action="{{ url_for('games.save_items', game_id=game.id) }}" id="game-items-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+      <textarea name="items_json" id="items_json" rows="16" spellcheck="false">{{ items_json or '' }}</textarea>
+      <div class="validate-row">
+        <button type="button" class="btn secondary small" id="validate-items-btn">Validate</button>
+        <button type="button" class="btn secondary small" id="copy-items-prompt-btn">Copy AI Prompt</button>
+        <span id="validate-items-result"></span>
+      </div>
+    </div>
+    <button type="submit" class="btn">Save Items</button>
+  </form>
+</div>
+
+<div class="card">
+  <h3>Assign Students</h3>
+  <form method="post" action="{{ url_for('games.assign_game', game_id=game.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="checkbox-list">
+      {% for s in students %}
+      <label><input type="checkbox" name="student_ids" value="{{ s.id }}" {% if s.id in assigned_ids %}checked{% endif %}> {{ s.name }} ({{ s.username }})</label>
+      {% else %}
+      <span>No active students yet.</span>
+      {% endfor %}
+    </div>
+    <br>
+    <button type="submit" class="btn">Update Assignments</button>
+  </form>
+</div>
+<script src="{{ url_for('static', filename='js/game_bulk_items.js') }}"></script>
+{% endblock %}

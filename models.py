@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 from flask_login import UserMixin
@@ -164,6 +165,64 @@ class AttemptAnswer(db.Model):
     is_correct = db.Column(db.Boolean, default=False)
 
     question = db.relationship("Question", foreign_keys=[question_id])
+
+
+class GameSession(db.Model):
+    __tablename__ = "game_sessions"
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    topic = db.Column(db.String(120))
+    description = db.Column(db.Text)
+    teacher_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    content_json = db.Column(db.Text)
+    is_published = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    teacher = db.relationship("User", foreign_keys=[teacher_id])
+    assignments = db.relationship("GameAssignment", backref="game", cascade="all, delete-orphan")
+    results = db.relationship("GamePlayResult", backref="game", cascade="all, delete-orphan")
+
+    @property
+    def item_count(self):
+        if not self.content_json:
+            return 0
+        try:
+            data = json.loads(self.content_json)
+        except ValueError:
+            return 0
+        items = data.get("items") if isinstance(data, dict) else None
+        return len(items) if isinstance(items, list) else 0
+
+
+class GameAssignment(db.Model):
+    __tablename__ = "game_assignments"
+
+    id = db.Column(db.Integer, primary_key=True)
+    game_id = db.Column(db.Integer, db.ForeignKey("game_sessions.id"), nullable=False)
+    student_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    assigned_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    student = db.relationship("User", foreign_keys=[student_id])
+
+    __table_args__ = (db.UniqueConstraint("game_id", "student_id", name="uq_game_student"),)
+
+
+class GamePlayResult(db.Model):
+    __tablename__ = "game_play_results"
+
+    id = db.Column(db.Integer, primary_key=True)
+    game_id = db.Column(db.Integer, db.ForeignKey("game_sessions.id"), nullable=False)
+    student_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    best_score = db.Column(db.Integer, default=0)
+    total_items = db.Column(db.Integer, default=0)
+    play_count = db.Column(db.Integer, default=0)
+    last_played_at = db.Column(db.DateTime)
+
+    student = db.relationship("User", foreign_keys=[student_id])
+
+    __table_args__ = (db.UniqueConstraint("game_id", "student_id", name="uq_gameresult_student"),)
 
 
 class Setting(db.Model):

@@ -854,6 +854,19 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--brand-600); }
 .note-image figcaption { font-size: 0.8rem; color: var(--ink-500); margin-top: 0.3rem; }
 
 /* ------------------------------------------------------------
+   Game sessions
+   ------------------------------------------------------------ */
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.game-tile h3 { margin-top: 0; }
+.game-tile .badge { margin-top: 0.3rem; }
+
+/* ------------------------------------------------------------
    Responsive
    ------------------------------------------------------------ */
 @media (max-width: 760px) {
